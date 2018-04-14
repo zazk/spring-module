@@ -1,0 +1,21 @@
+
+.n-navprimary{
+	position: relative;
+}
+.n-title{
+	position: absolute;
+	top: 0;
+	left: 20px;
+	z-index: 10;
+
+}
+
+.p10{
+	padding: 10px;
+}
+.w100{
+	width: 100%;
+}
+.w96{
+	width: 96%;
+}
