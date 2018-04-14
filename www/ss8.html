@@ -10,8 +10,6 @@
 
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
-		<link rel="stylesheet" href="assets/css/bootstrap-3-vert-offset-shim.css" />
-		<link rel="stylesheet" href="assets/css/main.css" />
 		<link rel="stylesheet" href="assets/css/chosen.min.css" />
 		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
@@ -25,7 +23,9 @@
 			<link rel="stylesheet" href="assets/css/ace-part2.min.css" />
 		<![endif]-->
 		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
-
+		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-3-vert-offset-shim.css" />
+		<link rel="stylesheet" href="assets/css/developer.css" />
 		<!--[if lte IE 9]>
 		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
 		<![endif]-->
@@ -106,13 +106,12 @@
 
 
 		<div class="main-container">
-
-			<div class="row">
-				<div class="col-xs-8">
-					
-				</div>
-				<div class="col-xs-4">
-					<div class="breadcrumbs ace-save-state" id="breadcrumbs">
+			<div class="text-right n-navprimary">
+				<h4 class="n-title blue">
+					<i class="ace-icon fa fa-globe"></i>
+					Modulo de Turismo
+				</h4>
+				<div class="breadcrumbs ace-save-state " id="breadcrumbs">
 						<ul class="breadcrumb">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
@@ -138,79 +137,234 @@
 								</a>
 							</li>
 						</ul><!-- /.breadcrumb -->
-					</div>
-				</div>	
-			</div>
-				<div class="col-ss8-title">	
-						<h3>Modulo de turismo</h3>
-						
-					</div>
-			<div class="s8-cnt">
-				<div class="s8-col">	
-					<div class="s8-info">	
-						<h3>	Total de Visitantes del Mes</h3>
-						<h2>	1200</h2>
-						<div class="s8-button">
-							<a href="	" type="button" class="btn btn-sm btn-primary">
-								
-								<span class="bigger-110">Ver Reporte</span>
-							</a> 
-						</div>
-					</div>
-					<div class="s8-info">	
-						<h3>Total de Visitantes del 2018 </h3>
-						<h2>	3400</h2>
-						<div class="s8-button">
-							<a href="	" type="button" class="btn btn-sm btn-primary">
-								
-								<span class="bigger-110">Ver Reporte</span>
-							</a> 
-						</div>
-					</div>
-					<div class="s8-info">	
-						<h3>Total Recaudado del 2018</h3>
-						<h2>	S/.354,000.00</h2>
-						<div class="s8-button">
-							<a href="	" type="button" class="btn btn-sm btn-primary">
-								
-								<span class="bigger-110">Ver Reporte</span>
-							</a> 
-						</div>
-					</div>
-				</div>
-				<div class="s8-col-2">	
-					<div class="s8-title-grafic">
-						<h3>Visitantes por ruta</h3>
-					</div>
-					<div class="s8-img">
-						<img src="assets/images/grafico/grafico.png">
-					</div>
 				</div>
 			</div>
-			
-			<!-- <div class="row vert-offset-top-5">
-				<div class="col-xs-2"></div>
-				<div class="col-xs-8">
-					<div class="row vert-offset-bottom-1" >
-						<div class="col-xs-2">
-							<label for="form-field-select-3">Ruta</label>
-						</div>				
-						<div class="col-xs-10">
-							<select class="chosen-select form-control">
-								<option value="cusco">Cusco</option>
-								<option value="tacna">Tacna</option>
-								<option value="arequipa">Arequipa</option>
-								<option value="moquegua">Moquegua</option>
-								<option value="ilo">Ilo</option>
-								<option value="cajamarca">Cajamarca</option>
-								
-							</select>							
-						</div>		
-					</div>					
-				</div>
-				<div class="col-xs-2"></div>
-			</div> -->
+			<div class="container ">
+				<h3 class="header green vert-offset-top-2">Validación de comprobantes por PDA</h3>
+				<div class="vert-offset-top-5">
+						<div class="row vert-offset-bottom-1" >
+							<div class="col-xs-4">
+								<div class="col-xs-5">
+									<label for="form-field-select-3">Buscar por Ficha</label>
+								</div>
+								<div class="col-xs-7">
+									<select class="chosen-select form-control">
+										<option value="ficha1">Ficha 1</option>
+										<option value="ficha2">Ficha 2</option>
+										<option value="ficha3">Ficha 3</option>
+										<option value="ficha4">Ficha 4</option>
+									</select>							
+								</div>
+							</div>				
+							<div class="col-xs-4">
+								<div class="col-xs-5">
+									<label for="form-field-select-3">Selecciona Ruta</label>
+								</div>
+								<div class="col-xs-7">
+									<select class="chosen-select form-control">
+										<option value="cusco">Cusco</option>
+										<option value="tacna">Tacna</option>
+										<option value="arequipa">Arequipa</option>
+										<option value="moquegua">Moquegua</option>
+										<option value="ilo">Ilo</option>
+										<option value="cajamarca">Cajamarca</option>
+										
+									</select>							
+								</div>								
+							</div>		
+							<div class="col-xs-4">
+								<button class="btn btn-primary btn-sm">
+									<i class="ace-icon fa fa-search align-top bigger-125"></i>
+									Buscar
+								</button>
+							</div>
+						</div>					
+						<div class="table-header">
+							Fichas
+						</div>	
+						<div>
+							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+								<thead>
+									<tr>
+										<th>
+											<i class="ace-icon fa fa-files-o"></i> 
+											Ficha Nro.
+										</th>
+										<th>
+											<i class="ace-icon fa fa-money"></i>
+											Monto
+										</th>
+										<th>
+											<i class="ace-icon fa fa-users"></i>
+											Pasajeros
+										</th>
+										<th>
+											<i class="ace-icon fa fa-calendar"></i>
+											Fecha
+										</th>
+										<th>
+											Estado
+										</th>
+										<th>
+											Operador
+										</th>
+										<th>
+											Ruta
+										</th>
+										<th>
+											Acción
+										</th>
+									</tr>
+								</thead>
 
+								<tbody>
+									<tr>
+										<td>
+											0023
+										</td>
+										<td>
+											200.00
+										</td>
+										<td>
+											10
+										</td>
+										<td>
+											12 junio 2018
+										</td>
+										<td>
+											<span class="label label-success arrowed">Pagado</span>
+										</td>
+										<td>
+											Turismo Inkaiko
+										</td>
+										<td>
+											Machu Picchu
+										</td>
+										<td>
+											<a class="btn btn-primary btn-sm">
+												<i class="ace-icon fa fa-eye"></i>Ver
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											0023
+										</td>
+										<td>
+											200.00
+										</td>
+										<td>
+											10
+										</td>
+										<td>
+											12 junio 2018
+										</td>
+										<td>
+											<span class="label label-success arrowed">Pagado</span>
+										</td>
+										<td>
+											Turismo Inkaiko
+										</td>
+										<td>
+											Machu Picchu
+										</td>
+										<td>
+											<a class="btn btn-primary btn-sm">
+												<i class="ace-icon fa fa-eye"></i>Ver
+											</a>
+										</td>
+									</tr>
+									<tr>
+										<td>
+											0023
+										</td>
+										<td>
+											200.00
+										</td>
+										<td>
+											10
+										</td>
+										<td>
+											12 junio 2018
+										</td>
+										<td>
+											<span class="label label-danger arrowed">Pendiente</span>
+										</td>
+										<td>
+											Turismo Inkaiko
+										</td>
+										<td>
+											Machu Picchu
+										</td>
+										<td>
+											<a class="btn btn-primary btn-sm">
+												<i class="ace-icon fa fa-eye"></i>Ver
+											</a>
+										</td>
+									</tr>									
+									<tr>
+										<td>
+											0023
+										</td>
+										<td>
+											200.00
+										</td>
+										<td>
+											10
+										</td>
+										<td>
+											12 junio 2018
+										</td>
+										<td>
+											<span class="label label-success arrowed">Pagado</span>
+										</td>
+										<td>
+											Turismo Inkaiko
+										</td>
+										<td>
+											Machu Picchu
+										</td>
+										<td>
+											<a class="btn btn-primary btn-sm">
+												<i class="ace-icon fa fa-eye"></i>Ver
+											</a>
+										</td>
+									</tr>	
+									<tr>
+										<td>
+											0023
+										</td>
+										<td>
+											200.00
+										</td>
+										<td>
+											10
+										</td>
+										<td>
+											12 junio 2018
+										</td>
+										<td>
+											<span class="label label-danger arrowed">Pendiente</span>
+										</td>
+										<td>
+											Turismo Inkaiko
+										</td>
+										<td>
+											Machu Picchu
+										</td>
+										<td>
+											<a class="btn btn-primary btn-sm">
+												<i class="ace-icon fa fa-eye"></i>Ver
+											</a>
+										</td>
+									</tr>																	
+								</tbody>
+							</table>
+						</div>								
+				</div>
+
+
+			</div>
 		</div><!-- /.main-container -->
 
 		<!-- basic scripts -->

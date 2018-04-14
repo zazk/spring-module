@@ -19,3 +19,11 @@
 .w96{
 	width: 96%;
 }
+
+table td{
+	vertical-align: middle !important;
+}
+
+.legendLabel{
+	font-size: 20px;
+}
