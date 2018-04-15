@@ -1,3 +1,7 @@
+.wancho-medium {
+  max-width: 768px;
+  margin: auto;
+}
 .n-navprimary {
   position: relative;
 }
@@ -191,6 +195,13 @@ body.active {
   }
   .n-title {
     top: 5px;
+  }
+}
+@media screen and (max-width: 640px) {
+  .ss3-main .col-xs-6 {
+    float: none;
+    width: 100%;
+    margin-bottom: 30px;
   }
 }
 @media screen and (max-width: 480px) {

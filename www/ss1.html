@@ -42,19 +42,18 @@
 	</head>
 
 	<body class="">
-
+		<!-- menu responsive	 -->
+	    <div  class="menu-mobile-open fa fa-bars"></div>
+	    <div class="menu-mobile-close fa fa-times"></div>
+	    <div class="menu-overlay"></div>
+	    <div class="menu-sidebar">
+	        <div class="menu-sidebar-cnt"></div>
+	    </div>	    
+		<!-- menu responsive	 -->
+    <div class="cnt-wrapper">
+        <div class="wrapper">		
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 				<div class="navbar-container ace-save-state" id="navbar-container">
-					<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-						<span class="sr-only">Toggle sidebar</span>
-
-						<span class="icon-bar"></span>
-
-						<span class="icon-bar"></span>
-
-						<span class="icon-bar"></span>
-					</button>
-
 					<div class="navbar-header pull-left">
 						<a href="index.html" class="navbar-brand">
 							<small>
@@ -68,10 +67,11 @@
 						<ul class="nav ace-nav" style="">
 							<li class="light-blue dropdown-modal">
 								<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-									<img class="nav-user-photo" src="assets/images/avatars/user.jpg" alt="Jason's Photo">
+
+									<span class="fa fa-user-circle fa-2x"></span>
 									<span class="user-info">
-										<small>Welcome,</small>
-										Jason
+										<small>Bienvenido,</small>
+										Carlos
 									</span>
 
 									<i class="ace-icon fa fa-caret-down"></i>
@@ -146,39 +146,42 @@
 						</ul><!-- /.breadcrumb -->
 				</div>
 			</div>
-			<div class="container">
+			<div class="container n-container">
 				<h3 class="header green vert-offset-top-2">Selecciona Ruta</h3>
-			</div>
-			<div class="login-container text-center vert-offset-top-3">
-				<form action="
-				">
-					<h4 class="blue">Saldo Actual</h2>
-					<h1 class="smaller vert-offset-top-1">
-						<span class="bigger-125 bg-primary p10">S/. 200.00</span>
-					</h3>
+				<div class="login-container text-center vert-offset-top-3">
+					<form action="
+					">
+						<h4 class="blue">Saldo Actual</h2>
+						<h1 class="smaller vert-offset-top-1">
+							<span class="bigger-125 bg-primary p10">S/. 200.00</span>
+						</h3>
 
-					
-					<div class="w96 label label-xlg label-success arrowed arrowed-right vert-offset-top-4">
-						<b>Elija la ruta de su grupo</b>
-					</div>					
-					<div class="form-group vert-offset-top-1">
-						<select class="w100 chosen-select"  >
-							<option selected>Seleccionar</option>
-							<option value="1">Huascarán</option>
-							<option value="2">Camino Inca</option>
-							<option value="3">Macchu picchu</option>
-						</select>
-					</div>
-					<div class="form-group">
-						<input type="file" id="id-input-file-2" />
-					</div>
-					<div class="vert-offset-top-2">
-						<button type="button" class="btn btn-success">Continuar</button>
 						
-					</div>					
-				</form>
+						<div class="w96 label label-xlg label-success arrowed arrowed-right vert-offset-top-4">
+							<b>Elija la ruta de su grupo</b>
+						</div>					
+						<div class="form-group vert-offset-top-1">
+							<select class="w100 chosen-select"  >
+								<option selected>Seleccionar</option>
+								<option value="1">Huascarán</option>
+								<option value="2">Camino Inca</option>
+								<option value="3">Macchu picchu</option>
+							</select>
+						</div>
+						<div class="form-group">
+							<input type="file" id="id-input-file-2" />
+						</div>
+						<div class="vert-offset-top-2">
+							<button type="button" class="btn btn-success">Continuar</button>
+							
+						</div>					
+					</form>
+				</div>				
 			</div>
+
 		</div><!-- /.main-container -->
+	</div>
+		</div>
 
 		<!-- basic scripts -->
 
@@ -200,6 +203,7 @@
 		<!-- ace scripts -->
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+		<script src="assets/js/main.js"></script>
 		<script type="text/javascript">
 			$(document).ready(function() {
 				$(".chosen-select").chosen(); 

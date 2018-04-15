@@ -37,19 +37,18 @@
 	</head>
 
 	<body class="">
-
+		<!-- menu responsive	 -->
+	    <div  class="menu-mobile-open fa fa-bars"></div>
+	    <div class="menu-mobile-close fa fa-times"></div>
+	    <div class="menu-overlay"></div>
+	    <div class="menu-sidebar">
+	        <div class="menu-sidebar-cnt"></div>
+	    </div>	    
+		<!-- menu responsive	 -->
+    <div class="cnt-wrapper">
+        <div class="wrapper">		
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 				<div class="navbar-container ace-save-state" id="navbar-container">
-					<button type="button" class="navbar-toggle menu-toggler pull-left" id="menu-toggler" data-target="#sidebar">
-						<span class="sr-only">Toggle sidebar</span>
-
-						<span class="icon-bar"></span>
-
-						<span class="icon-bar"></span>
-
-						<span class="icon-bar"></span>
-					</button>
-
 					<div class="navbar-header pull-left">
 						<a href="index.html" class="navbar-brand">
 							<small>
@@ -63,10 +62,11 @@
 						<ul class="nav ace-nav" style="">
 							<li class="light-blue dropdown-modal">
 								<a data-toggle="dropdown" href="#" class="dropdown-toggle">
-									<img class="nav-user-photo" src="assets/images/avatars/user.jpg" alt="Jason's Photo">
+
+									<span class="fa fa-user-circle fa-2x"></span>
 									<span class="user-info">
-										<small>Welcome,</small>
-										Jason
+										<small>Bienvenido,</small>
+										Carlos
 									</span>
 
 									<i class="ace-icon fa fa-caret-down"></i>
@@ -144,8 +144,7 @@
 			<div class="container ">
 				<h3 class="header green vert-offset-top-2">Revisar Datos</h3>
 				<div class="vert-offset-top-3">
-					<div class="col-xs-2"></div>
-					<div class="col-xs-8">
+					<div class="wancho-medium">
 						<div class="table-header">
 							3 pasajeros ingresados
 						</div>	
@@ -245,7 +244,8 @@
 
 			</div>
 		</div><!-- /.main-container -->
-
+		</div>
+	</div>
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
@@ -266,6 +266,7 @@
 		<!-- ace scripts -->
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
+		<script src="assets/js/main.js"></script>
 
 	</body>
 </html>
