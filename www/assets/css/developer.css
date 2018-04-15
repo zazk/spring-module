@@ -22,6 +22,27 @@ table td {
 .legendLabel {
   font-size: 20px;
 }
+.dropdown-toggle span,
+.dropdown-toggle i {
+  display: inline-block;
+  vertical-align: middle;
+}
+.dropdown-toggle .user-info {
+  top: 0;
+}
+.breadcrumb >li {
+  color: #438eb9;
+}
+.breadcrumb >li.active,
+.breadcrumb >li:hover {
+  color: #555;
+}
+.breadcrumb >li.active > a,
+.breadcrumb >li:hover > a {
+  color: #555;
+  font-weight: bold;
+  text-decoration: underline;
+}
 .responsive-logo {
   margin-top: 10px;
   width: 80%;
@@ -127,7 +148,7 @@ table td {
   color: #fff;
   margin-left: 10px;
 }
-.menu-responsive li.active a {
+.menu-responsive li.active {
   background-color: #69aa46;
 }
 .menu-responsive li a {
