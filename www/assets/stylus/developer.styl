@@ -6,6 +6,11 @@ c-2 = #69AA46
 	max-width 768px
 	margin auto
 
+.wancho-regular
+	max-width 1180px
+	margin auto
+	width 94%
+	
 .n-navprimary
 	position relative
 .n-title
@@ -19,7 +24,12 @@ c-2 = #69AA46
 	width 100%
 .w96
 	width 96%
-	
+
+//tabla responsive	
+.n-table-responsive	
+	.n-label
+		display none
+//tabla responsive	
 
 table td
 	vertical-align: middle !important
@@ -179,6 +189,52 @@ body
 		min-height 48px
 	.n-title
 		top 5px
+
+@media screen and (max-width:745px)
+	.ss8
+		.table-header
+			margin-bottom 10px
+		
+		.col-xs-4
+			display block
+			float none
+			width 100%
+			margin-bottom 10px
+			overflow hidden
+			&:last-child
+				text-align center
+	//tablas responsive
+	.n-table-responsive	
+		thead
+			display none
+		tbody
+			td
+				display flex
+				width 100%
+				flex-flow row wrap
+				border none !important
+				padding 0 !important
+				&:nth-child(8)
+					border-bottom 5px solid #fff !important
+
+		.n-label
+			height 40px
+			display flex
+			width 30%
+			align-items center
+			background-color #6FB3E0
+			color #fff
+			padding-left 10px
+			box-sizing border-box
+		.n-descrip
+			padding 0 10px
+			box-sizing border-box
+			height 40px
+			width 70%
+			display flex
+			align-items center
+			border-bottom 1px solid #ccc
+
 
 @media screen and (max-width:640px)
 	//ss3
