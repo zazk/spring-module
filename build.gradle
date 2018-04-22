@@ -21,18 +21,6 @@ dependencies {
 	
 }
 
-// Embeded Jetty for testing
-/*
-jettyRun{
-	contextPath = "spring4"
-	httpPort = 8080
-}
-
-jettyRunWar{
-	contextPath = "spring4"
-	httpPort = 8080
-}
-*/
 //For Eclipse IDE only
 eclipse {
 

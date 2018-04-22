@@ -7,5 +7,8 @@ Java 8 ( tested with `java version "1.8.0_172` )
 ### Install dependences 
 `gradle`
 
-# Run server
+### Run server
 `gradle appRun`
+
+### Generate war
+`gradle war`
