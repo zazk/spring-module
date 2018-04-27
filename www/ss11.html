@@ -10,6 +10,9 @@
 
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="assets/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="assets/css/bootstrap-3-vert-offset-shim.css" />
+		<link rel="stylesheet" href="assets/css/main.css" />
+		<link rel="stylesheet" href="assets/css/chosen.min.css" />
 		<link rel="stylesheet" href="assets/font-awesome/4.5.0/css/font-awesome.min.css" />
 
 		<!-- text fonts -->
@@ -21,9 +24,11 @@
 		<!--[if lte IE 9]>
 			<link rel="stylesheet" href="assets/css/ace-part2.min.css" />
 		<![endif]-->
+
 		<link rel="stylesheet" href="assets/css/ace-rtl.min.css" />
 		<link rel="stylesheet" href="assets/css/bootstrap-3-vert-offset-shim.css" />
 		<link rel="stylesheet" href="assets/css/developer.css" />
+
 		<!--[if lte IE 9]>
 		  <link rel="stylesheet" href="assets/css/ace-ie.min.css" />
 		<![endif]-->
@@ -45,8 +50,8 @@
 	        <div class="menu-sidebar-cnt"></div>
 	    </div>	    
 		<!-- menu responsive	 -->
-    <div class="cnt-wrapper">
-        <div class="wrapper">		
+	<div class="cnt-wrapper">
+	<div class="wrapper">
 		<div id="navbar" class="navbar navbar-default          ace-save-state">
 				<div class="navbar-container ace-save-state" id="navbar-container">
 					<div class="navbar-header pull-left">
@@ -103,7 +108,7 @@
 			</div>
 
 
-		<div class="main-container">
+		<div class="main-container">				
 			<div class="text-right n-navprimary">
 				<h4 class="n-title blue">
 					<i class="ace-icon fa fa-globe"></i>
@@ -113,7 +118,7 @@
 						<ul class="breadcrumb menu-list">
 							<li>
 								<i class="ace-icon fa fa-home home-icon"></i>
-								<a href="ss1.html">Home</a>
+								<a href="#">Home</a>
 							</li>
 
 							<li>
@@ -141,111 +146,67 @@
 						</ul><!-- /.breadcrumb -->
 				</div>
 			</div>
-			<div class="container ">
-				<h3 class="header green vert-offset-top-2">Revisar Datos</h3>
-				<div class="vert-offset-top-3">
+			<div class="container ss3">
+				<h3 class="header green vert-offset-top-2">Registro de pagos</h3>
+				<div class="row ss3-main">
 					<div class="wancho-medium">
+						<h4 class="header smaller lighter blue">Pago de Agencia</h4>
 						<div class="table-header">
-							3 pasajeros ingresados
+							Insertar pago
 						</div>	
-						<div>
-							<table id="dynamic-table" class="table table-striped table-bordered table-hover">
-								<thead>
-									<tr>
-										<th>
-											<i class="ace-icon fa fa-user"></i>
-											Nombres y Apellidos
-										</th>
-										<th>
-											<i class="ace-icon fa file-o"></i>
-											DNI
-										</th>
-										<th>
-											Acción
-										</th>
-									</tr>
-								</thead>
+						<table class="table-bordered" width="100%">
+							<tr>
+								<td class="p10">
+									<form action="" class="form-horizontal">
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1"> Nro operacion </label>
 
-								<tbody>
-									<tr>
-										<td>
-											Juan Perez Maldonado
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Enrique Lucio Juan
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Juan Perez Maldonado
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Juan Perez Maldonado
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Enrique Lucio Juan
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-									<tr>
-										<td>
-											Juan Perez Maldonado
-										</td>
-										<td>
-											88445454
-										</td>
-										<td>
-											<a class="btn btn-danger btn-sm"><i class="ace-icon fa fa-trash-o "></i>Eliminar</a>
-										</td>
-									</tr>
-								</tbody>
-							</table>
-						</div>		
-						<div class="text-center">
-								<button type="button" class="btn btn-success" onclick="window.location.href='ss5.html'">Datos confirmados</button>
-						</div>							
+											<div class="col-sm-9">
+												<input type="text" id="form-field-1" placeholder="Nro operacion" class="col-xs-10 col-sm-5 w100">
+											</div>
+										</div>				
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">Monto </label>
+
+											<div class="col-sm-9">
+												<input type="text" id="form-field-1" placeholder="Monto" class="col-xs-10 col-sm-5 w100">
+											</div>
+										</div>	
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">Fecha de abono</label>
+
+											<div class="col-sm-9">
+												<input type="text" id="form-field-1" placeholder="Fecha" class="col-xs-10 col-sm-5 w100">
+											</div>
+										</div>		
+																		
+										<div class="form-group">
+											<label class="col-sm-3 control-label no-padding-right" for="form-field-1">Voucher</label>
+
+											<div class="col-sm-9">
+												<input type="file" id="id-input-file-2" />
+											</div>
+											
+											
+										</div>																							
+										<div class="text-center">
+												<button type="button" class="btn btn-warning" onclick="window.location.href='ss10.html'">Ingresar Pago</button>
+										</div>						
+									</form>									
+								</td>
+							</tr>
+						</table>		
 					</div>
-				</div>
+					
 
+				</div>
 			</div>
+			
+
 		</div><!-- /.main-container -->
 		</div>
 	</div>
+
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
@@ -260,13 +221,30 @@
 			if('ontouchstart' in document.documentElement) document.write("<script src='assets/js/jquery.mobile.custom.min.js'>"+"<"+"/script>");
 		</script>
 		<script src="assets/js/bootstrap.min.js"></script>
-
+		<script src="assets/js/chosen.jquery.min.js"></script>
 		<!-- page specific plugin scripts -->
 
 		<!-- ace scripts -->
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
 		<script src="assets/js/main.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".chosen-select").chosen(); 
+				$('#id-input-file-2').ace_file_input({
+					no_file:'Ingresar voucher',
+					btn_choose:'Choose',
+					btn_change:'Cargar',
+					droppable:false,
+					onchange:null,
+					thumbnail:false //| true | large
+					//whitelist:'gif|png|jpg|jpeg'
+					//blacklist:'exe|php'
+					//onchange:''
+					//
+				});				
+			});
 
+		</script>
 	</body>
 </html>

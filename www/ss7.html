@@ -136,7 +136,7 @@
 							</li>
 							<li >
 								<i class="ace-icon fa fa-arrow-circle-right"></i>
-								<a href="#">
+								<a href="ss10.html">
 									Pagos
 								</a>
 							</li>
@@ -235,11 +235,25 @@
 										<span class="label label-success arrowed">Verificado</span>
 									</td>
 								</tr>
+								<tr>
+									 <td class="p10" colspan="3">
+										<form action="" class="form-horizontal">
+											<div class="form-group">
+
+											<div class="col-sm-9">
+												<input type="file" id="id-input-file-2" />
+											</div>
+											
+											</div>
+									</form>
+									 </td>
+								</tr>
 							</tbody>
 						</table>
+						
 					</div>		
 					<div class="text-center">
-							<button class="btn btn-success">Finalizar verificacion</button>
+							<button class="btn btn-success" onclick="window.location.href='ss6.html'">Finalizar verificacion</button>
 					</div>							
 				</div>
 			</div>
@@ -267,6 +281,24 @@
 		<script src="assets/js/ace-elements.min.js"></script>
 		<script src="assets/js/ace.min.js"></script>
 		<script src="assets/js/main.js"></script>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$(".chosen-select").chosen(); 
+				$('#id-input-file-2').ace_file_input({
+					no_file:'Ingresar imagen',
+					btn_choose:'Choose',
+					btn_change:'Cargar',
+					droppable:false,
+					onchange:null,
+					thumbnail:false //| true | large
+					//whitelist:'gif|png|jpg|jpeg'
+					//blacklist:'exe|php'
+					//onchange:''
+					//
+				});				
+			});
+
+		</script>
 
 	</body>
 </html>
