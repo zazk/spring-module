@@ -31,3 +31,18 @@ Install Java
 
 Install PostgreSQL
 `scoop install postgresql`
+
+
+### Setup Postgre SQL
+
+Create User Role PDA with no password
+`>psql -U postgres -c "CREATE ROLE pda LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE;" postgres`
+
+Create Database with Role PDA 
+`>psql -U postgres -c "CREATE DATABASE pda OWNER pda;`
+
+Login to SQL 
+`>psql -U pda;`
+
+Run the query from the file: 
+`ROOT_PROJECT/src/main/resources/db/migration/V1__Create_post_table.sql`
