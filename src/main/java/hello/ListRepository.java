@@ -1,5 +1,6 @@
 package hello;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
@@ -7,6 +8,8 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -38,6 +41,19 @@ public class ListRepository {
 
     //Example with Arguments.
      // lista las rutas
+
+    // Note the ILIKE operator for case insensitive
+    public List<Map<String, Object>> showListWithDate( LocalDate date ){
+        List<Map<String, Object>> list =
+                jdbcTemplate.queryForList(
+                        "SELECT id, title, to_char(fecha, 'YYYY-MM-DD HH24:MI:SS') fecha FROM t_categoria WHERE fecha = ? "
+                        , date
+                );
+        return list;
+    }
+
+
+
     // Note the ILIKE operator for case insensitive
     public List<Map<String, Object>> showListWithParams( Integer id, String title ){
         List<Map<String, Object>> list =
@@ -47,8 +63,9 @@ public class ListRepository {
                         );
         return list;
     }
+
     // lista las rutas
-    // Note the Integer.parseInt case for integers values in the database.
+    // Note the Integer.parseInt case for integers values in the database. Be careful with type
     // Note the ILIKE operator for case insensitive
     // Note the % for ILIKE expressions in PostgreSQL
     public List<Map<String, Object>> showListWithParamsMap( Map<String, String> map ){

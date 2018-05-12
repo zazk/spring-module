@@ -1,9 +1,11 @@
 package hello;
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -40,7 +42,22 @@ public class HomeController {
         // -------------------------------------------
         // Examples
         // -------------------------------------------
-        // Example with params http://localhost:8080/list_rutas_params?usuario=id=1&title=to
+        // Weird annotation for date parameteres
+        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
+        @RequestMapping(value = "/list_rutas_date", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_rutas_date(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.showListWithDate( date) );
+            System.out.println( "Sure can you print this model:" + date );
+            return listRepository.showListWithDate( date );
+        }
+
+
+    // Example with params http://localhost:8080/list_rutas_params?usuario=id=1&title=to
         @RequestMapping(value = "/list_rutas_params", produces = "application/json")
         @ResponseBody
         public List<Map<String, Object>> list_rutas_params(
