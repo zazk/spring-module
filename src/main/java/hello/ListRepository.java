@@ -1,6 +1,8 @@
 package hello;
 
+import java.sql.PreparedStatement;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -11,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -33,25 +37,62 @@ public class ListRepository {
                 .getResultList();
     	return list;
     }
+
     // Example with JDBC - The simplest way.
     public List<Map<String, Object>> showListJdbc(){
-		List<Map<String, Object>> list =  jdbcTemplate.queryForList("SELECT * FROM t_categoria"); 
+		List<Map<String, Object>> list =  jdbcTemplate.queryForList(
+		        "SELECT id, title, TO_CHAR(fecha, 'yyyy-mm-dd') fecha FROM t_categoria");
     	return list;
     }
 
     //Example with Arguments.
      // lista las rutas
 
+    // Insert Row
+    public Map<String, Object> insertRow( String title, LocalDate date ){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO t_categoria(title,fecha) VALUES(?,?)", new String[]{"id"});
+                ps.setString(1, title);
+                ps.setObject(2, date);
+                return ps;
+            }, keyHolder);
+
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", keyHolder.getKey() );
+        return obj;
+    }
+
+    // Update Row
+    public Map<String, Object> updateRow( String title, LocalDate date, Integer id ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_categoria SET title = ?, fecha= ? WHERE id=? ", title ,date, id);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
+    // Delete Row
+    public Map<String, Object> deleteRow( Integer id ){
+        int status = jdbcTemplate.update(
+            "DELETE FROM t_categoria WHERE id=? ", id);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
     // Note the ILIKE operator for case insensitive
     public List<Map<String, Object>> showListWithDate( LocalDate date ){
         List<Map<String, Object>> list =
                 jdbcTemplate.queryForList(
-                        "SELECT id, title, to_char(fecha, 'YYYY-MM-DD HH24:MI:SS') fecha FROM t_categoria WHERE fecha = ? "
-                        , date
+                    "SELECT id, title, TO_CHAR(fecha, 'yyyy-mm-dd') fecha FROM t_categoria WHERE date_trunc('day', fecha) = ? "
+                    , date
                 );
         return list;
     }
-
 
 
     // Note the ILIKE operator for case insensitive

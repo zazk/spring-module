@@ -3,4 +3,5 @@
 ################
 .gradle
 .m2
+git bin
 build

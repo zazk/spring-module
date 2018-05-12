@@ -39,9 +39,54 @@ public class HomeController {
                 System.out.println( listRepository.showListJdbc() );
                 return listRepository.showListJdbc();
         }
+
         // -------------------------------------------
         // Examples
         // -------------------------------------------
+
+        // Weird annotation for date parameteres
+        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
+        @RequestMapping(value = "/insert_row", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_row(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam String title
+        ){
+            System.out.println( "insert the id:" + listRepository.insertRow( title, date) );
+            return listRepository.showListJdbc();
+        }
+
+        // Weird annotation for date parameteres
+        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
+        @RequestMapping(value = "/update_row", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_row(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam String title,
+                @RequestParam Integer id
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateRow( title, date, id) );
+            System.out.println( "Update the id:" + id );
+            return listRepository.showListJdbc();
+        }
+
+        // Weird annotation for date parameteres
+        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
+        @RequestMapping(value = "/delete_row", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> delete_row(
+                // required params
+                @RequestParam Integer id
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.deleteRow( id) );
+            System.out.println( "Remove the id:" + id );
+            return listRepository.showListJdbc();
+        }
+
         // Weird annotation for date parameteres
         // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
         @RequestMapping(value = "/list_rutas_date", produces = "application/json")
@@ -55,7 +100,6 @@ public class HomeController {
             System.out.println( "Sure can you print this model:" + date );
             return listRepository.showListWithDate( date );
         }
-
 
     // Example with params http://localhost:8080/list_rutas_params?usuario=id=1&title=to
         @RequestMapping(value = "/list_rutas_params", produces = "application/json")
