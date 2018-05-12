@@ -23,17 +23,45 @@ public class ListRepository {
         return entityManager;
     }
 
+    // Example with Native Query Entity Manager
     public List<Map> showList(){
     	@SuppressWarnings("unchecked")
-		List<Map> list = entityManager.createNativeQuery("select * from routes")
+		List<Map> list = entityManager.createNativeQuery("select * from t_categoria")
                 .getResultList();
     	return list;
     }
-
+    // Example with JDBC - The simplest way.
     public List<Map<String, Object>> showListJdbc(){
 		List<Map<String, Object>> list =  jdbcTemplate.queryForList("SELECT * FROM t_categoria"); 
     	return list;
     }
+
+    //Example with Arguments.
+     // lista las rutas
+    // Note the ILIKE operator for case insensitive
+    public List<Map<String, Object>> showListWithParams( Integer id, String title ){
+        List<Map<String, Object>> list =
+                jdbcTemplate.queryForList(
+                        "SELECT * FROM t_categoria WHERE id = ? OR title ILIKE ? "
+                        , id, ("%" + title + "%")
+                        );
+        return list;
+    }
+    // lista las rutas
+    // Note the Integer.parseInt case for integers values in the database.
+    // Note the ILIKE operator for case insensitive
+    // Note the % for ILIKE expressions in PostgreSQL
+    public List<Map<String, Object>> showListWithParamsMap( Map<String, String> map ){
+        List<Map<String, Object>> list =
+                jdbcTemplate.queryForList(
+                        "SELECT * FROM t_categoria WHERE id = ? OR title ILIKE ? "
+                        , Integer.parseInt(map.get("id")), ("%" + map.get("title") + "%")
+                );
+        return list;
+    }
+
+    // ---------------------------------------------
+    // Valid Queries
 
     // lista las rutas
         public List<Map<String, Object>> showListRutas(){

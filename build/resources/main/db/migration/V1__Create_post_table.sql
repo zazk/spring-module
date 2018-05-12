@@ -1,4 +1,4 @@
-create table routes (
+create table t_categoria (
     id int not null,
     title varchar(100) not null
 );
