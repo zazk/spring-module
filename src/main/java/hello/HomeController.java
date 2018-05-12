@@ -5,7 +5,9 @@ import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -35,17 +37,55 @@ public class HomeController {
                 System.out.println( listRepository.showListJdbc() );
                 return listRepository.showListJdbc();
         }
+        // -------------------------------------------
+        // Examples
+        // -------------------------------------------
+        // Example with params http://localhost:8080/list_rutas_params?usuario=id=1&title=to
+        @RequestMapping(value = "/list_rutas_params", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_rutas_params(
+                // param state setting as a optional
+                @RequestParam( required = false ) Integer state,
+                // param state setting as a default value
+                @RequestParam( defaultValue = "red") String color,
+                // required params
+                @RequestParam Integer id,
+                @RequestParam String title
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showListWithParams( id, title) );
+                System.out.println( "Sure can you print this model:" + state );
+                return listRepository.showListWithParams( id, title);
+        }
+
+        // Example with Map params http://localhost:8080/list_rutas_params_multiple?id=1&title=to
+        @RequestMapping(value = "/list_rutas_params_multiple", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_rutas_params_multiple(
+                // get multiple params in a varible
+                @RequestParam Map<String, String> parameters
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.showListWithParamsMap( parameters) );
+            System.out.println( "Sure can you print this model:" + parameters
+                    + " Usuario:"+ parameters.get("id") + " Password:"+ parameters.get("title") );
+            return listRepository.showListWithParamsMap( parameters);
+        }
+
+        //---------------
+        // Rutas PDA
+        //---------------
 
         // Lista las rutas
         @RequestMapping(value = "/list_rutas", method = RequestMethod.GET, produces = "application/json")
         @ResponseBody
         public List<Map<String, Object>> list_rutas()  {
-                        //Get from Query
-                System.out.println( listRepository.showListRutas() );
-                return listRepository.showListRutas();
+            //Get from Query
+            System.out.println( listRepository.showListRutas() );
+            return listRepository.showListRutas();
         }
 
-        // Lista las categorias
+    // Lista las categorias
         @RequestMapping(value = "/list_categorias", method = RequestMethod.GET, produces = "application/json")
         @ResponseBody
         public List<Map<String, Object>> list_categorias()  {
