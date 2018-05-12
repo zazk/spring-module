@@ -1,24 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="0f678b20-d558-492a-a2cf-dd8f4d09a20a" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileContent/fileContent.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/fileContent/fileContent.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/fileHashes/fileHashes.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/taskHistory/taskHistory.bin" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/taskHistory/taskHistory.bin" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/4.7/taskHistory/taskHistory.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/4.7/taskHistory/taskHistory.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" beforeDir="false" afterPath="$PROJECT_DIR$/.gradle/buildOutputCleanup/buildOutputCleanup.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/main/db/migration/V1__Create_post_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main/db/migration/V1__Create_post_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/main/hello/HomeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main/hello/HomeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/main/hello/ListRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/main/hello/ListRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/hello/HomeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/hello/HomeController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/classes/java/main/hello/ListRepository.class" beforeDir="false" afterPath="$PROJECT_DIR$/build/classes/java/main/hello/ListRepository.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/build/resources/main/db/migration/V1__Create_post_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/build/resources/main/db/migration/V1__Create_post_table.sql" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hello/HomeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hello/HomeController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/hello/ListRepository.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/hello/ListRepository.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Create_post_table.sql" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/db/migration/V1__Create_post_table.sql" afterDir="false" />
-    </list>
+    <list default="true" id="0f678b20-d558-492a-a2cf-dd8f4d09a20a" name="Default" comment="" />
     <ignored path="$PROJECT_DIR$/bin/default/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -32,11 +15,8 @@
       <file leaf-file-name="ListRepository.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/java/hello/ListRepository.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="227">
-              <caret line="59" column="38" lean-forward="true" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
-              <folding>
-                <element signature="e#1942#1957#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="452">
+              <caret line="74" column="19" lean-forward="true" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="19" />
             </state>
           </provider>
         </entry>
@@ -45,7 +25,7 @@
         <entry file="file://$PROJECT_DIR$/src/main/java/hello/HomeController.java">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="507">
-              <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
+              <caret line="87" column="9" selection-start-line="87" selection-start-column="9" selection-end-line="87" selection-end-column="9" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -201,7 +181,6 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="20" y="43" width="1400" height="837" extended-state="0" />
-    <editor active="true" />
     <layout>
       <window_info anchor="right" id="Palette" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -255,7 +234,7 @@
     <entry file="file://$PROJECT_DIR$/src/main/java/hello/HomeController.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="507">
-          <caret line="59" column="9" lean-forward="true" selection-start-line="59" selection-start-column="9" selection-end-line="59" selection-end-column="9" />
+          <caret line="87" column="9" selection-start-line="87" selection-start-column="9" selection-end-line="87" selection-end-column="9" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -264,11 +243,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/java/hello/ListRepository.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="227">
-          <caret line="59" column="38" lean-forward="true" selection-start-line="59" selection-start-column="38" selection-end-line="59" selection-end-column="38" />
-          <folding>
-            <element signature="e#1942#1957#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="452">
+          <caret line="74" column="19" lean-forward="true" selection-start-line="74" selection-start-column="19" selection-end-line="74" selection-end-column="19" />
         </state>
       </provider>
     </entry>
