@@ -151,24 +151,149 @@ public class HomeController {
         }
 
 
-        //Insertando registros
+        // Listando visitantes por grupo
+        @RequestMapping(value = "/list_visitantexgrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_visitantexgrupo(
+                // required params
+                @RequestParam Integer codGrupo
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showVisitantexGrupo( codGrupo ) );
+                return listRepository.showVisitantexGrupo(codGrupo);
+        }
+
+
+        // ************************ Insertando registros ******************************************
 
         //Insertando noticias
-        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
-        /*
-        @RequestMapping(value = "/insert_row", produces = "application/json")
+        @RequestMapping(value = "/insert_news", produces = "application/json")
         @ResponseBody
-        public List<Map<String, Object>> insert_row(
+        public List<Map<String, Object>> insert_news(
                 // required params
                 @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
-                @RequestParam String title
+                @RequestParam String titulo,
+                @RequestParam String contenido,
+                @RequestParam String user
+
         ){
-            System.out.println( "insert the id:" + listRepository.insertRow( title, date) );
-            return listRepository.showListJdbc();
-        } */
+            System.out.println( "insert the id:" + listRepository.insertNews( titulo, contenido, date, user ) );
+            return listRepository.showListNoticiasActivas();
+        }
+
+        //Insertando visitantes
+        @RequestMapping(value = "/insert_visitante", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_visitante(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fNac,
+                @RequestParam Integer codDocumento,
+                @RequestParam Integer codCategoria,
+                @RequestParam Integer codPais,
+                @RequestParam String nombre,
+                @RequestParam String apellido,
+                @RequestParam String nroDocumento,
+                @RequestParam Integer sexo
+        ){
+            System.out.println( "insert the id:" + listRepository.insertVisitante( codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo ) );
+            return listRepository.showListVisitantes();
+        }
+
+        //Insertando grupos
+        @RequestMapping(value = "/insert_grupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_grupo(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fNac,
+                @RequestParam Integer codDocumento,
+                @RequestParam Integer codCategoria,
+                @RequestParam Integer codPais,
+                @RequestParam String nombre,
+                @RequestParam String apellido,
+                @RequestParam String nroDocumento,
+                @RequestParam Integer sexo
+        ){
+            System.out.println( "insert the id:" + listRepository.insertGrupo( codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo ) );
+            return listRepository.showListGrupos();
+        }
 
 
-        //Fin insertando registros
+        // ***************************** Fin insertando registros ************************************
+
+
+        // ******************************** Eliminando Registros ****************************************
+
+        // Eliminando noticias
+        @RequestMapping(value = "/delete_news", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> delete_news(
+                // required params
+                @RequestParam Integer id
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.deleteNews( id) );
+            System.out.println( "Remove the id:" + id );
+            return listRepository.showListNoticiasActivas();
+        }
+
+
+        // ****************************** Fin eliminando registros ********************************
+
+
+        // ********************************* Actualizando registros ****************************
+
+
+        // Editando noticias
+        @RequestMapping(value = "/update_news", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_news(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam String titulo,
+                @RequestParam String contenido,
+                @RequestParam Boolean estado,
+                @RequestParam Integer id
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateNews( titulo, contenido, date, estado, id) );
+            System.out.println( "Update the id:" + id );
+            return listRepository.showListNoticiasActivas();
+        }
+
+        // Editando visitante
+        @RequestMapping(value = "/update_visitante", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_visitante(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam Integer codDocumento,
+                @RequestParam Integer codCategoria,
+                @RequestParam Integer codPais,
+                @RequestParam String nombre,
+                @RequestParam String apellido,
+                @RequestParam String nroDocumento,
+                @RequestParam Integer sexo,
+                @RequestParam Integer id
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateVisitante( codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, date, sexo, id) );
+            System.out.println( "Update the id:" + id );
+            return listRepository.showListVisitantes();
+        }
+
+
+        // ********************************** Fin actualizando registros *********************
+
+        // ******************************* Listando ***************************************
+
+        // Lista visitantes
+        @RequestMapping(value = "/list_visitantes", method = RequestMethod.GET, produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_visitantes()  {
+            //Get from Query
+            System.out.println( listRepository.showListVisitantes() );
+            return listRepository.showListVisitantes();
+        }
 
         // Lista las rutas
         @RequestMapping(value = "/list_rutas", method = RequestMethod.GET, produces = "application/json")
@@ -179,7 +304,7 @@ public class HomeController {
             return listRepository.showListRutas();
         }
 
-    // Lista las categorias
+        // Lista las categorias
         @RequestMapping(value = "/list_categorias", method = RequestMethod.GET, produces = "application/json")
         @ResponseBody
         public List<Map<String, Object>> list_categorias()  {
@@ -223,6 +348,8 @@ public class HomeController {
                 System.out.println( listRepository.showListNoticiasActivas() );
                 return listRepository.showListNoticiasActivas();
         }
+
+        // *************************** Fin listando ********************************
 
         
         @RequestMapping(value = "/get-books", method = RequestMethod.GET, produces = "application/json")
