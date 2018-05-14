@@ -128,6 +128,31 @@ public class ListRepository {
         return list;
     }
 
+
+    //Insertando registros
+
+    //Insertando noticias
+    public Map<String, Object> insertNews( String title, LocalDate date ){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO t_categoria(title,fecha) VALUES(?,?)", new String[]{"id"});
+                ps.setString(1, title);
+                ps.setObject(2, date);
+                return ps;
+            }, keyHolder);
+
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", keyHolder.getKey() );
+        return obj;
+    }
+
+
+    //Fin de insertando registros
+
+
     // ---------------------------------------------
     // Valid Queries
 

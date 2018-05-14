@@ -150,6 +150,26 @@ public class HomeController {
                 return listRepository.showLoginUser(user,pwd);
         }
 
+
+        //Insertando registros
+
+        //Insertando noticias
+        // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
+        /*
+        @RequestMapping(value = "/insert_row", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_row(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam String title
+        ){
+            System.out.println( "insert the id:" + listRepository.insertRow( title, date) );
+            return listRepository.showListJdbc();
+        } */
+
+
+        //Fin insertando registros
+
         // Lista las rutas
         @RequestMapping(value = "/list_rutas", method = RequestMethod.GET, produces = "application/json")
         @ResponseBody
