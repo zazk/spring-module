@@ -137,6 +137,19 @@ public class HomeController {
         // Rutas PDA
         //---------------
 
+        // Validando usuario
+        @RequestMapping(value = "/login_user", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> login_user(
+                // required params
+                @RequestParam String user,
+                @RequestParam String pwd
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showLoginUser( user, pwd) );
+                return listRepository.showLoginUser(user,pwd);
+        }
+
         // Lista las rutas
         @RequestMapping(value = "/list_rutas", method = RequestMethod.GET, produces = "application/json")
         @ResponseBody

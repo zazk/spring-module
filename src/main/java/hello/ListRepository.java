@@ -105,7 +105,6 @@ public class ListRepository {
         return list;
     }
 
-    // lista las rutas
     // Note the Integer.parseInt case for integers values in the database. Be careful with type
     // Note the ILIKE operator for case insensitive
     // Note the % for ILIKE expressions in PostgreSQL
@@ -115,6 +114,17 @@ public class ListRepository {
                         "SELECT * FROM t_categoria WHERE id = ? OR title ILIKE ? "
                         , Integer.parseInt(map.get("id")), ("%" + map.get("title") + "%")
                 );
+        return list;
+    }
+
+
+    // Validando usuario
+    public List<Map<String, Object>> showLoginUser( String user, String pwd ){
+        List<Map<String, Object>> list =
+                jdbcTemplate.queryForList(
+                        "SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? "
+                        , user, pwd
+                        );
         return list;
     }
 
