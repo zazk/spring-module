@@ -133,35 +133,6 @@ public class HomeController {
             return listRepository.showListWithParamsMap( parameters);
         }
 
-        //---------------
-        // Rutas PDA
-        //---------------
-
-        // Validando usuario
-        @RequestMapping(value = "/login_user", produces = "application/json")
-        @ResponseBody
-        public List<Map<String, Object>> login_user(
-                // required params
-                @RequestParam String user,
-                @RequestParam String pwd
-                ){
-                //Get from Query with Params
-                System.out.println( listRepository.showLoginUser( user, pwd) );
-                return listRepository.showLoginUser(user,pwd);
-        }
-
-
-        // Listando visitantes por grupo
-        @RequestMapping(value = "/list_visitantexgrupo", produces = "application/json")
-        @ResponseBody
-        public List<Map<String, Object>> list_visitantexgrupo(
-                // required params
-                @RequestParam Integer codGrupo
-                ){
-                //Get from Query with Params
-                System.out.println( listRepository.showVisitantexGrupo( codGrupo ) );
-                return listRepository.showVisitantexGrupo(codGrupo);
-        }
 
 
         // ************************ Insertando registros ******************************************
@@ -204,17 +175,43 @@ public class HomeController {
         @ResponseBody
         public List<Map<String, Object>> insert_grupo(
                 // required params
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fNac,
-                @RequestParam Integer codDocumento,
-                @RequestParam Integer codCategoria,
-                @RequestParam Integer codPais,
-                @RequestParam String nombre,
-                @RequestParam String apellido,
-                @RequestParam String nroDocumento,
-                @RequestParam Integer sexo
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecProgramada,
+                @RequestParam String codOperador,
+                @RequestParam Integer codRuta,
+                @RequestParam Integer nroVisitantes,
+                @RequestParam Integer numCosto,
+                @RequestParam String insUsuario
         ){
-            System.out.println( "insert the id:" + listRepository.insertGrupo( codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo ) );
-            return listRepository.showListGrupos();
+            System.out.println( "insert the id:" + listRepository.insertGrupo( codOperador, codRuta, fecProgramada, nroVisitantes, numCosto, insUsuario ) );
+            return listRepository.showConsultaGrupoOperador(codOperador);
+        }
+
+
+        //Insertando visitantes al grupos
+        @RequestMapping(value = "/insert_visitantegrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_visitantegrupo(
+                // required params
+                @RequestParam Integer codGrupo,
+                @RequestParam Integer codVisitante
+        ){
+            System.out.println( "insert the id:" + listRepository.insertVisitanteGrupo( codGrupo, codVisitante ) );
+            return listRepository.showVisitantexGrupo(codGrupo);
+        }
+
+        //Insertando pagos
+        @RequestMapping(value = "/insert_pago", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> insert_pago(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecAbono,
+                @RequestParam String codOperador,
+                @RequestParam String nroOperacion,
+                @RequestParam Integer monto,
+                @RequestParam String voucher
+        ){
+            System.out.println( "insert the id:" + listRepository.insertPago( codOperador, nroOperacion, monto, fecAbono, voucher ) );
+            return listRepository.showConsultaPagoOperador(codOperador);
         }
 
 
@@ -228,12 +225,26 @@ public class HomeController {
         @ResponseBody
         public List<Map<String, Object>> delete_news(
                 // required params
-                @RequestParam Integer id
+                @RequestParam Integer codNoticia
         ){
             //Get from Query with Params
-            System.out.println( listRepository.deleteNews( id) );
-            System.out.println( "Remove the id:" + id );
+            System.out.println( listRepository.deleteNews( codNoticia ) );
+            System.out.println( "Remove the id:" + codNoticia );
             return listRepository.showListNoticiasActivas();
+        }
+
+        // Eliminando visitante de grupo
+        @RequestMapping(value = "/delete_visitantegrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> delete_visitantegrupo(
+                // required params
+                @RequestParam Integer codGrupo,
+                @RequestParam Integer codVisitante
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.deleteVisitanteGrupo( codGrupo, codVisitante ) );
+            System.out.println( "Remove the id:" + codGrupo + " vistante: " + codVisitante );
+            return listRepository.showVisitantexGrupo(codGrupo);
         }
 
 
@@ -241,6 +252,20 @@ public class HomeController {
 
 
         // ********************************* Actualizando registros ****************************
+
+        // Cambiando contraseña
+        @RequestMapping(value = "/update_pwd", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_pwd(
+                // required params
+                @RequestParam String newClave,
+                @RequestParam Integer codUser
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updatePwd( newClave, codUser ) );
+            System.out.println( "Update the id:" + codUser );
+            return listRepository.showListNoticiasActivas();
+        }
 
 
         // Editando noticias
@@ -259,6 +284,7 @@ public class HomeController {
             System.out.println( "Update the id:" + id );
             return listRepository.showListNoticiasActivas();
         }
+
 
         // Editando visitante
         @RequestMapping(value = "/update_visitante", produces = "application/json")
@@ -281,8 +307,185 @@ public class HomeController {
             return listRepository.showListVisitantes();
         }
 
+        // Editando grupo
+        @RequestMapping(value = "/update_grupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_grupo(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam Integer codRuta,
+                @RequestParam Integer codGrupo
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateGrupo( date, codRuta, codGrupo) );
+            System.out.println( "Update the id:" + codGrupo );
+            return listRepository.showConsultaGrupo(codGrupo);
+        }
+
+        // Tomar Asistencia al grupo
+        @RequestMapping(value = "/update_asistencia", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_asistencia(
+                // required params
+                @RequestParam Integer codGrupo,
+                @RequestParam Integer codVisitante,
+                @RequestParam Boolean asistio
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateAsistencia( codGrupo, codVisitante, asistio ) );
+            System.out.println( "Update the id:" + codGrupo );
+            return listRepository.showConsultaGrupo(codGrupo);
+        }
+
+        // Verifica visita del grupo
+        @RequestMapping(value = "/update_visitagrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_visitagrupo(
+                // required params
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
+                @RequestParam Integer nroVisitantes,
+                @RequestParam Integer nroInasistentes,
+                @RequestParam Integer costo,
+                @RequestParam Integer estado,
+                @RequestParam String documento,
+                @RequestParam String userModificacion,
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate dateModificacion,
+                @RequestParam Integer codGrupo
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateVisitaGrupo( date, nroVisitantes, nroInasistentes, costo, estado, documento, userModificacion, dateModificacion, codGrupo) );
+            System.out.println( "Update the id:" + codGrupo );
+            return listRepository.showConsultaGrupo(codGrupo);
+        }
+
+        // Agregar documento al grupo
+        @RequestMapping(value = "/update_docgrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_docgrupo(
+                // required params
+                @RequestParam Integer codGrupo,
+                @RequestParam String documento
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updateDocGrupo( codGrupo, documento ) );
+            System.out.println( "Update the id:" + codGrupo );
+            return listRepository.showConsultaGrupo(codGrupo);
+        }
+
 
         // ********************************** Fin actualizando registros *********************
+
+
+        // **************************** Listando con parametros *************************
+
+        // Validando usuario
+        @RequestMapping(value = "/login_user", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> login_user(
+                // required params
+                @RequestParam String user,
+                @RequestParam String pwd
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showLoginUser( user, pwd) );
+                return listRepository.showLoginUser(user,pwd);
+        }
+
+
+        // Consulta operador
+        @RequestMapping(value = "/consulta_operador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_operador(
+                // required params
+                @RequestParam String codOperador
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaOperador( codOperador ) );
+                return listRepository.showConsultaOperador(codOperador);
+        }
+
+
+        // Consulta visitante
+        @RequestMapping(value = "/consulta_visitante", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_visitante(
+                // required params
+                @RequestParam Integer codVisitante
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaVisitante( codVisitante ) );
+                return listRepository.showConsultaVisitante(codVisitante);
+        }
+
+
+        // Consulta Grupo
+        @RequestMapping(value = "/consulta_grupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_grupo(
+                // required params
+                @RequestParam Integer codGrupo
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaGrupo( codGrupo ) );
+                return listRepository.showConsultaGrupo(codGrupo);
+        }
+
+
+        // Listando visitantes por grupo
+        @RequestMapping(value = "/list_visitantexgrupo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_visitantexgrupo(
+                // required params
+                @RequestParam Integer codGrupo
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showVisitantexGrupo( codGrupo ) );
+                return listRepository.showVisitantexGrupo(codGrupo);
+        }
+
+
+        // Consulta Grupo x Operador
+        @RequestMapping(value = "/consulta_grupooperador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_grupooperador(
+                // required params
+                @RequestParam String codOperador
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaGrupoOperador( codOperador ) );
+                return listRepository.showConsultaGrupoOperador(codOperador);
+        }
+
+
+        // Consulta Pagos x operador
+        @RequestMapping(value = "/consulta_pagooperador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_pagoperador(
+                // required params
+                @RequestParam String codOperador
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaPagoOperador( codOperador ) );
+                return listRepository.showConsultaPagoOperador(codOperador);
+        }
+
+        // Filtro Pagos x operador
+        @RequestMapping(value = "/filtro_pagooperador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> filtro_pagoperador(
+                // required params
+                @RequestParam String codOperador,
+                @RequestParam Integer nroOperacion,
+                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecPago,
+                @RequestParam Integer estado
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showFiltroPagoOperador( codOperador, nroOperacion, fecPago, estado ) );
+                return listRepository.showFiltroPagoOperador(codOperador, nroOperacion, fecPago, estado);
+        }
+
+        // ************************* Fin listando con parametros ***********************
+
 
         // ******************************* Listando ***************************************
 
@@ -347,6 +550,15 @@ public class HomeController {
                         //Get from Query
                 System.out.println( listRepository.showListNoticiasActivas() );
                 return listRepository.showListNoticiasActivas();
+        }
+
+        // Lista de grupos
+        @RequestMapping(value = "/list_grupos", method = RequestMethod.GET, produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> list_grupos()  {
+                        //Get from Query
+                System.out.println( listRepository.showListGrupos() );
+                return listRepository.showListGrupos();
         }
 
         // *************************** Fin listando ********************************

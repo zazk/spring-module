@@ -118,28 +118,6 @@ public class ListRepository {
     }
 
 
-    // Validando usuario
-    public List<Map<String, Object>> showLoginUser( String user, String pwd ){
-        List<Map<String, Object>> list =
-                jdbcTemplate.queryForList(
-                        "SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? AND bol_estado = '1' "
-                        , user, pwd
-                        );
-        return list;
-    }
-
-
-    // Listando visitantes por grupo
-    public List<Map<String, Object>> showVisitantexGrupo( Integer codGrupo ){
-        List<Map<String, Object>> list =
-                jdbcTemplate.queryForList(
-                        "SELECT * FROM t_usuario WHERE var_usuario = ? AND bol_estado = '1' "
-                        , codGrupo
-                        );
-        return list;
-    }
-
-
     // *********************** Insertando registros *********************************
 
     //Insertando noticias
@@ -188,22 +166,21 @@ public class ListRepository {
         return obj;
     }
 
-    //Insertando grupos
-    public Map<String, Object> insertGrupo( String codOperador, Integer codRuta, Integer codPais, String nombre, String apellido, String nroDocumento, LocalDate fNac, Integer sexo ){
+    //Insertando grupos 
+    public Map<String, Object> insertGrupo( String codOperador, Integer codRuta, LocalDate fecProgramada, Integer nroVisitantes, Integer numCosto, String insUsuario ){
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
         jdbcTemplate.update(
             connection -> {
                 PreparedStatement ps = connection.prepareStatement(
-                        "INSERT INTO t_grupo(var_cod_operador, srl_cod_ruta, dte_fec_programada, dte_fec_visita, int_nro_visitante, int_nro_inasistente, num_costo, int_estado, var_documento, txt_motivoobservado, dte_fec_observado, var_usuario, var_usuariomodificacion, dte_fec_modificacion)VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", new String[]{"srl_cod_grupo"});
-                ps.setString(1, codDocumento);
+                        "INSERT INTO t_grupo(var_cod_operador, srl_cod_ruta, dte_fec_programada, int_nro_visitante, num_costo, int_estado, var_usuario)VALUES (?, ?, ?, ?, ?, ?, ?)", new String[]{"srl_cod_grupo"});
+                ps.setString(1, codOperador);
                 ps.setInt(2, codRuta);
-                ps.setInt(3, codPais);
-                ps.setString(4, nombre);
-                ps.setString(5, apellido);
-                ps.setString(6, nroDocumento);
-                ps.setObject(7, fNac);
-                ps.setInt(8, sexo);
+                ps.setObject(3, fecProgramada);
+                ps.setInt(4, nroVisitantes);
+                ps.setInt(5, numCosto);
+                ps.setInt(6, 1);
+                ps.setString(7, insUsuario);
                 return ps;
             }, keyHolder);
 
@@ -213,6 +190,47 @@ public class ListRepository {
     }
 
 
+    //Insertando visitantes al grupo
+    public Map<String, Object> insertVisitanteGrupo( Integer codGrupo, Integer codVisitante ){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO t_grupo_visitante(srl_cod_grupo, srl_cod_visitante) VALUES (?, ?);", new String[]{"srl_cod_grupo"});
+                ps.setInt(1, codGrupo);
+                ps.setInt(2, codVisitante);
+                return ps;
+            }, keyHolder);
+
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("srl_cod_grupo", keyHolder.getKey() );
+        return obj;
+    }
+
+
+    //Insertando pagos 
+    public Map<String, Object> insertPago( String codOperador, String nroOperacion, Integer monto, LocalDate fecAbono, String voucher ){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+            connection -> {
+                PreparedStatement ps = connection.prepareStatement(
+                        "INSERT INTO t_pago(var_cod_operador, var_operacion, num_monto, dte_fec_abono, var_comprobante, int_estado) VALUES (?, ?, ?, ?, ?, ?);", new String[]{"srl_cod_pago"});
+                ps.setString(1, codOperador);
+                ps.setString(2, nroOperacion);
+                ps.setInt(3, monto);
+                ps.setObject(4, fecAbono);
+                ps.setString(5, voucher);
+                ps.setInt(6, 1);
+                return ps;
+            }, keyHolder);
+
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("srl_cod_pago", keyHolder.getKey() );
+        return obj;
+    }
+
 
     // ************************ Fin de insertando registros ***********************************************
 
@@ -220,9 +238,18 @@ public class ListRepository {
     // ************************ Eliminando registros ****************************************************
 
     // Eliminar Noticias
-    public Map<String, Object> deleteNews( Integer id ){
+    public Map<String, Object> deleteNews( Integer codNoticia ){
         int status = jdbcTemplate.update(
-            "DELETE FROM t_noticia WHERE srl_cod_noticia = ? ", id);
+            "DELETE FROM t_noticia WHERE srl_cod_noticia = ? ", codNoticia);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
+    // Eliminar visitante de grupo
+    public Map<String, Object> deleteVisitanteGrupo( Integer codGrupo, Integer codVisitante ){
+        int status = jdbcTemplate.update(
+            "DELETE FROM t_grupo_visitante WHERE srl_cod_grupo = ? AND srl_cod_visitante = ? ", codGrupo, codVisitante);
         Map<String, Object> obj = new HashMap<String,Object>();
         obj.put("id", status);
         return obj;
@@ -230,12 +257,19 @@ public class ListRepository {
 
 
 
-
-
     // ********************** Fin eliminando registros ***********************************************
 
 
     // *********************** Actualizando registros **************************************
+
+    // Cambiando contraseña
+    public Map<String, Object> updatePwd( String newClave, Integer codUser ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_usuario SET var_clave = ? WHERE srl_cod_usuario = ?", newClave, codUser);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
 
     // Editando Noticias
     public Map<String, Object> updateNews( String titulo, String contenido, LocalDate date, Boolean estado, Integer id ){
@@ -255,11 +289,116 @@ public class ListRepository {
         return obj;
     }
 
+    // Editando Grupo
+    public Map<String, Object> updateGrupo( LocalDate date, Integer codRuta, Integer id ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_grupo SET dte_fec_programada = ?, srl_cod_ruta = ?  WHERE srl_cod_grupo = ? ", date, codRuta, id);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
+    // Tomando asistencia al grupo
+    public Map<String, Object> updateAsistencia( Integer codGrupo, Integer codVisitante, Boolean asistio ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_grupo_visitante SET bol_ingreso = ? WHERE srl_cod_grupo = ? AND srl_cod_visitante = ?", asistio, codGrupo, codVisitante);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
+    // Verifica visita del grupo
+    public Map<String, Object> updateVisitaGrupo( LocalDate date, Integer nroVisitantes, Integer nroInasistentes, Integer costo, Integer estado, String documento, String userModificacion, LocalDate dateModificacion, Integer codGrupo ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_grupo SET dte_fec_visita = ?, int_nro_visitante = ?, int_nro_inasistente = ?, num_costo = ?, int_estado = ?, var_documento = ?, var_usuariomodificacion = ?, dte_fec_modificacion = ?  WHERE srl_cod_grupo = ? ", date, nroVisitantes, nroInasistentes, costo, estado, documento, userModificacion, dateModificacion, codGrupo);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
+    // Agregar documento al grupo
+    public Map<String, Object> updateDocGrupo( Integer codGrupo, String documento ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_grupo SET var_documento = ? WHERE srl_cod_grupo = ? ", documento, codGrupo);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
 
     // *********************** Fin Actualizar registros *********************************************
 
-    // ---------------------------------------------
-    // Valid Queries
+    // ************************ Listando con parametros ***********************************
+
+    // Validando usuario
+    public List<Map<String, Object>> showLoginUser( String user, String pwd ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList(
+                "SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? AND bol_estado = '1' "
+                , user, pwd
+            );
+        return list;
+    }
+
+    // Consultando operador
+    public List<Map<String, Object>> showConsultaOperador( String codOperador ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_operador WHERE var_cod_operador = ? ", codOperador);
+        return list;
+    }
+
+    // Consultando visitante
+    public List<Map<String, Object>> showConsultaVisitante( Integer codVisitante ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_visitante WHERE srl_cod_visitante = ? ", codVisitante);
+        return list;
+    }
+
+    // Consultando Grupo
+    public List<Map<String, Object>> showConsultaGrupo( Integer codGrupo ){
+        List<Map<String, Object>> list =
+           jdbcTemplate.queryForList("SELECT * FROM t_visitante WHERE srl_cod_visitante = ? ", codGrupo);
+        return list;
+    }
+
+
+    // Listando visitantes por grupo
+    public List<Map<String, Object>> showVisitantexGrupo( Integer codGrupo ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList(
+                "SELECT * FROM t_visitante INNER JOIN t_tip_documento ON t_visitante.srl_cod_documento = t_tip_documento.srl_cod_documento INNER JOIN t_grupo_visitante ON t_visitante.srl_cod_visitante = t_grupo_visitante.srl_cod_visitante WHERE srl_cod_grupo = ? "
+                    , codGrupo
+                );
+        return list;
+    }
+
+    // Consultando Grupos x operador
+    public List<Map<String, Object>> showConsultaGrupoOperador( String codOperador ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_grupo WHERE var_cod_operador = ?", codOperador);
+        return list;
+    }
+
+
+    // Consultando Pagos x operador
+    public List<Map<String, Object>> showConsultaPagoOperador( String codOperador ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_pago WHERE var_cod_operador = ?", codOperador);
+        return list;
+    }
+
+    // Consultando Pagos x operador
+    public List<Map<String, Object>> showFiltroPagoOperador( String codOperador, Integer nroOperacion, LocalDate fecPago, Integer estado ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_pago WHERE var_cod_operador = ? ", codOperador);
+        return list;
+    }
+
+
+    // ******************************* Fin listando con parametros *******************************
+    
+
+    // ************************************ Listando ***********************************
 
     // lista los visitantes
         public List<Map<String, Object>> showListVisitantes(){
@@ -302,7 +441,17 @@ public class ListRepository {
         List<Map<String, Object>> list_noticias_activas =  jdbcTemplate.queryForList("SELECT * FROM t_noticia WHERE bol_activo='1'"); 
         return list_noticias_activas;
     }
+
+    // lista de grupos
+        public List<Map<String, Object>> showListGrupos(){
+        List<Map<String, Object>> list_grupos =  jdbcTemplate.queryForList("SELECT * FROM t_grupo"); 
+        return list_grupos;
+    }
     
+
+    // ****************************** Fin listando ******************************************+
+
+
     public List<Map<String, Object>> showListStoreProcedures(){
 		List<Map<String, Object>> list =  jdbcTemplate.queryForList("SELECT * from get_books()"); 
     	return list;
