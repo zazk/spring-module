@@ -325,6 +325,15 @@ public class ListRepository {
         return obj;
     }
 
+    // Rechazar pago
+    public Map<String, Object> updatePagoRechazo( Integer estado, String motivoRechazo, Integer codPago ){
+        int status = jdbcTemplate.update(
+            "UPDATE t_pago SET int_estado = ?, txt_motivorechazo = ? WHERE srl_cod_pago = ? ", estado, motivoRechazo, codPago);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        return obj;
+    }
+
 
     // *********************** Fin Actualizar registros *********************************************
 
@@ -333,10 +342,7 @@ public class ListRepository {
     // Validando usuario
     public List<Map<String, Object>> showLoginUser( String user, String pwd ){
         List<Map<String, Object>> list =
-            jdbcTemplate.queryForList(
-                "SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? AND bol_estado = '1' "
-                , user, pwd
-            );
+            jdbcTemplate.queryForList("SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? AND bol_estado = '1'", user, pwd);
         return list;
     }
 
@@ -344,6 +350,13 @@ public class ListRepository {
     public List<Map<String, Object>> showConsultaOperador( String codOperador ){
         List<Map<String, Object>> list =
             jdbcTemplate.queryForList("SELECT * FROM t_operador WHERE var_cod_operador = ? ", codOperador);
+        return list;
+    }
+
+    // Consultando operador x usuario
+    public List<Map<String, Object>> showConsultaOperadorxemail( String email ){
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_operador WHERE var_email = ? ", email);
         return list;
     }
 
@@ -365,14 +378,12 @@ public class ListRepository {
     // Listando visitantes por grupo
     public List<Map<String, Object>> showVisitantexGrupo( Integer codGrupo ){
         List<Map<String, Object>> list =
-            jdbcTemplate.queryForList(
-                "SELECT * FROM t_visitante INNER JOIN t_tip_documento ON t_visitante.srl_cod_documento = t_tip_documento.srl_cod_documento INNER JOIN t_grupo_visitante ON t_visitante.srl_cod_visitante = t_grupo_visitante.srl_cod_visitante WHERE srl_cod_grupo = ? "
-                    , codGrupo
+            jdbcTemplate.queryForList("SELECT * FROM t_visitante INNER JOIN t_tip_documento ON t_visitante.srl_cod_documento = t_tip_documento.srl_cod_documento INNER JOIN t_grupo_visitante ON t_visitante.srl_cod_visitante = t_grupo_visitante.srl_cod_visitante WHERE srl_cod_grupo = ? ", codGrupo
                 );
         return list;
     }
 
-    // Consultando Grupos x operador
+    // Consultando Grupos ************* OPERADOR ******************
     public List<Map<String, Object>> showConsultaGrupoOperador( String codOperador ){
         List<Map<String, Object>> list =
             jdbcTemplate.queryForList("SELECT * FROM t_grupo WHERE var_cod_operador = ?", codOperador);
@@ -380,17 +391,51 @@ public class ListRepository {
     }
 
 
-    // Consultando Pagos x operador
+    // Consultando Pagos ******************* OPERADOR ****************
     public List<Map<String, Object>> showConsultaPagoOperador( String codOperador ){
         List<Map<String, Object>> list =
             jdbcTemplate.queryForList("SELECT * FROM t_pago WHERE var_cod_operador = ?", codOperador);
         return list;
     }
 
-    // Consultando Pagos x operador
-    public List<Map<String, Object>> showFiltroPagoOperador( String codOperador, Integer nroOperacion, LocalDate fecPago, Integer estado ){
-        List<Map<String, Object>> list =
-            jdbcTemplate.queryForList("SELECT * FROM t_pago WHERE var_cod_operador = ? ", codOperador);
+    // Filtro Pagos ************* OPERADOR ***************+
+    public List<Map<String, Object>> showFiltroPagoOperador( String nroOperacion, String fecPago, Integer estado ){
+        String query = "SELECT * FROM t_pago WHERE ";
+        
+        String qOperacion = ((nroOperacion == "")?"": " var_operacion = '" + nroOperacion + "'" + ((estado == 0)?"":" AND ")) ;
+        String qEstado = ((estado == 0)?"":" int_estado = " + estado + ((fecPago == "")?"":" AND "));
+        String qFecha = (fecPago == "")?"":" dte_fec_abono = '" + fecPago + "'";
+
+        query = query + qOperacion + qEstado + qFecha;
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(query);
+        System.out.println(query);
+        return list;
+    }
+
+    // Filtro Pagos ************** RECAUDADOR ***************
+    public List<Map<String, Object>> showFiltroPagoRecaudador( String nroOperacion, String codOperador ){
+        String query = "SELECT * FROM t_pago WHERE ";
+        
+        String qOperacion = ((nroOperacion == "")?"": " var_operacion = '" + nroOperacion + "'" + ((codOperador == "")?"":" AND ")) ;
+        String qOperador = (codOperador == "")?"":" var_cod_operador = '" + codOperador + "'";
+
+        query = query + qOperacion + qOperador;
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(query);
+        System.out.println(query);
+        return list;
+    }
+
+    // Filtro Grupos *************** OPERADOR *******************
+    public List<Map<String, Object>> showFiltroGrupoOperador( String codGrupo, String fecVisita, Integer estado ){
+        String query = "SELECT * FROM t_grupo WHERE ";
+        
+        String qGrupo = ((codGrupo == "")?"": " srl_cod_grupo = " + codGrupo + ((estado == 0)?"":" AND ")) ;
+        String qEstado = ((estado == 0)?"":" int_estado = " + estado + ((fecVisita == "")?"":" AND "));
+        String qFecha = (fecVisita == "")?"":" dte_fec_programada = '" + fecVisita + "'";
+
+        query = query + qGrupo + qEstado + qFecha;
+        List<Map<String, Object>> list = jdbcTemplate.queryForList(query);
+        System.out.println(query);
         return list;
     }
 
