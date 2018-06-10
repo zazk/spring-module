@@ -358,6 +358,7 @@ public class HomeController {
             return listRepository.showConsultaGrupo(codGrupo);
         }
 
+
         // Agregar documento al grupo
         @RequestMapping(value = "/update_docgrupo", produces = "application/json")
         @ResponseBody
@@ -370,6 +371,23 @@ public class HomeController {
             System.out.println( listRepository.updateDocGrupo( codGrupo, documento ) );
             System.out.println( "Update the id:" + codGrupo );
             return listRepository.showConsultaGrupo(codGrupo);
+        }
+
+
+        // Rechazar pago
+        @RequestMapping(value = "/update_pagorechazo", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> update_pagorechazo(
+                // required params
+                @RequestParam String codOperador,
+                @RequestParam Integer codPago,
+                @RequestParam Integer estado,
+                @RequestParam String motivoRechazo
+        ){
+            //Get from Query with Params
+            System.out.println( listRepository.updatePagoRechazo( estado, motivoRechazo, codPago ) );
+            System.out.println( "Update the id:" + codPago );
+            return listRepository.showConsultaPagoOperador(codOperador);
         }
 
 
@@ -402,6 +420,19 @@ public class HomeController {
                 //Get from Query with Params
                 System.out.println( listRepository.showConsultaOperador( codOperador ) );
                 return listRepository.showConsultaOperador(codOperador);
+        }
+
+
+        // Consulta operador x email
+        @RequestMapping(value = "/consulta_operadorxemail", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> consulta_operadorxemail(
+                // required params
+                @RequestParam String email
+                ){
+                //Get from Query with Params
+                System.out.println( listRepository.showConsultaOperadorxemail( email ) );
+                return listRepository.showConsultaOperadorxemail(email);
         }
 
 
@@ -444,7 +475,7 @@ public class HomeController {
         }
 
 
-        // Consulta Grupo x Operador
+        // Consulta Grupo *********** OPERADOR ****************
         @RequestMapping(value = "/consulta_grupooperador", produces = "application/json")
         @ResponseBody
         public List<Map<String, Object>> consulta_grupooperador(
@@ -457,10 +488,10 @@ public class HomeController {
         }
 
 
-        // Consulta Pagos x operador
+        // Consulta Pagos ********* OPERADOR ****************
         @RequestMapping(value = "/consulta_pagooperador", produces = "application/json")
         @ResponseBody
-        public List<Map<String, Object>> consulta_pagoperador(
+        public List<Map<String, Object>> consulta_pagooperador(
                 // required params
                 @RequestParam String codOperador
                 ){
@@ -469,19 +500,45 @@ public class HomeController {
                 return listRepository.showConsultaPagoOperador(codOperador);
         }
 
-        // Filtro Pagos x operador
+        // Filtro Pagos ********** OPERADOR ************
         @RequestMapping(value = "/filtro_pagooperador", produces = "application/json")
         @ResponseBody
-        public List<Map<String, Object>> filtro_pagoperador(
+        public List<Map<String, Object>> filtro_pagooperador(
                 // required params
-                @RequestParam String codOperador,
-                @RequestParam Integer nroOperacion,
-                @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecPago,
+                @RequestParam String nroOperacion,
+                @RequestParam String fecPago,
                 @RequestParam Integer estado
                 ){
-                //Get from Query with Params
-                System.out.println( listRepository.showFiltroPagoOperador( codOperador, nroOperacion, fecPago, estado ) );
-                return listRepository.showFiltroPagoOperador(codOperador, nroOperacion, fecPago, estado);
+
+                System.out.println( listRepository.showFiltroPagoOperador( nroOperacion, fecPago, estado ) );
+                return listRepository.showFiltroPagoOperador(nroOperacion, fecPago, estado);
+        }
+
+        // Filtro Pagos ********* RECAUDADOR ************
+        @RequestMapping(value = "/filtro_pagorecaudador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> filtro_pagorecaudador(
+                // required params
+                @RequestParam String nroOperacion,
+                @RequestParam String operador
+                ){
+
+                System.out.println( listRepository.showFiltroPagoRecaudador( nroOperacion, operador ) );
+                return listRepository.showFiltroPagoRecaudador(nroOperacion, operador);
+        }
+
+        // Filtro Grupos ********** OPERADOR **************
+        @RequestMapping(value = "/filtro_grupooperador", produces = "application/json")
+        @ResponseBody
+        public List<Map<String, Object>> filtro_grupooperador(
+                // required params
+                @RequestParam String codGrupo,
+                @RequestParam String fecVisita,
+                @RequestParam Integer estado
+                ){
+
+                System.out.println( listRepository.showFiltroGrupoOperador( codGrupo, fecVisita, estado ) );
+                return listRepository.showFiltroGrupoOperador(codGrupo, fecVisita, estado);
         }
 
         // ************************* Fin listando con parametros ***********************
