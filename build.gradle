@@ -55,7 +55,7 @@ dependencies {
 }
 
 flyway {
-    url = "jdbc:postgresql//localhost:5433/sernanp"
+    url = "jdbc:postgresql//88.99.13.244:5433/sernanp"
     user = 'postgres'
     password = 'j03l123'
     driver = 'org.postgresql.Driver'
@@ -64,4 +64,12 @@ flyway {
 
 war {
    baseName = 'springo'
+}
+
+jar {
+  manifest {
+    attributes(
+      'Main-Class': 'hello.Application'
+    )
+  }
 }
