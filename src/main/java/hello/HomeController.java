@@ -656,16 +656,15 @@ public class HomeController {
             @RequestParam("imagen") MultipartFile image
         ) {
         Map<String,Object> map = new HashMap<String, Object>();
-        String[] filetypes =  { "image/jpeg","image/png" };
 
         System.out.println("Uploading File============= " +  image.getContentType());
-        if ( !Arrays.asList().contains(image.getContentType() ) ){
+        if ( image.getContentType().equals("image/jpeg") ||   image.getContentType().equals("image/png") ){
+            storageService.store(image);
+            map.put("message",
+                    "Really, You successfully uploaded " + image.getOriginalFilename() + "!" + image.getContentType());
+        }else{
             map.put("message", "Tipo de Archivo no aceptado");
-            return map;
         }
-        storageService.store(image);
-        map.put("message",
-                "Really, You successfully uploaded " + image.getOriginalFilename() + "!" + image.getContentType());
         return map;
     }
 
