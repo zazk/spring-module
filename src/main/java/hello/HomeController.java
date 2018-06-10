@@ -1,19 +1,21 @@
 package hello;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import hello.storage.StorageService;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.Resource;
 
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -650,15 +652,31 @@ public class HomeController {
 
     @RequestMapping(value = "/upload-pago", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
-    public String handleFileUpload(
+    public Map<String, Object> handleFileUpload(
             @RequestParam("imagen") MultipartFile image
         ) {
-        System.out.println("HERE=============");
-        storageService.store(image);
-        String o = ("message" +
-                "You successfully uploaded " + image.getOriginalFilename() + "!");
+        Map<String,Object> map = new HashMap<String, Object>();
+        String[] filetypes =  { "image/jpeg","image/png" };
 
-        return o;
+        System.out.println("Uploading File============= " +  image.getContentType());
+        if ( !Arrays.asList().contains(image.getContentType() ) ){
+            map.put("message", "Tipo de Archivo no aceptado");
+            return map;
+        }
+        storageService.store(image);
+        map.put("message",
+                "Really, You successfully uploaded " + image.getOriginalFilename() + "!" + image.getContentType());
+        return map;
+    }
+
+    @GetMapping("/file/{filename:.+}")
+    @ResponseBody
+    public Resource serveFile(@PathVariable String filename) {
+        System.out.println("Serving File File============= ");
+        Resource file = storageService.loadAsResource(filename);
+        return file;
+        //ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
+         //       "attachment; filename=\"" + file.getFilename() + "\"").body(file);
     }
 
 }
