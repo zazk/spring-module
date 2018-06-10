@@ -8,6 +8,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.time.Instant;
 import java.util.stream.Stream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +30,13 @@ public class FileSystemStorageService implements StorageService {
     }
 
     @Override
-    public void store(MultipartFile file) {
-        String filename = StringUtils.cleanPath(file.getOriginalFilename());
+    public String store(MultipartFile file) {
+        //String filename = StringUtils.cleanPath(file.getOriginalFilename());
+        String prefix = "pago";
+        String ext = file.getOriginalFilename()
+                .substring(file.getOriginalFilename().lastIndexOf('.') + 1)
+                .toLowerCase();
+        String filename = prefix +"-"+ Long.toString( Instant.now().toEpochMilli() ) +"." + ext ;
         try {
             if (file.isEmpty()) {
                 throw new StorageException("Failed to store empty file " + filename);
@@ -44,6 +50,7 @@ public class FileSystemStorageService implements StorageService {
             try (InputStream inputStream = file.getInputStream()) {
                 Files.copy(inputStream, this.rootLocation.resolve(filename),
                         StandardCopyOption.REPLACE_EXISTING);
+                return filename;
             }
         }
         catch (IOException e) {

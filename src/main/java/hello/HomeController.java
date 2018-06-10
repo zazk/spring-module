@@ -659,9 +659,8 @@ public class HomeController {
 
         System.out.println("Uploading File============= " +  image.getContentType());
         if ( image.getContentType().equals("image/jpeg") ||   image.getContentType().equals("image/png") ){
-            storageService.store(image);
-            map.put("message",
-                    "Really, You successfully uploaded " + image.getOriginalFilename() + "!" + image.getContentType());
+            String filename = storageService.store(image);
+            map.put("message", filename);
         }else{
             map.put("message", "Tipo de Archivo no aceptado");
         }
