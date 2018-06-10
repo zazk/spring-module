@@ -120,6 +120,69 @@ public class ListRepository {
 
     // *********************** Insertando registros *********************************
 
+    //Insertando Operador
+    public Map<String, Object> insertOperador(
+            String codigo,
+            String ruc,
+            String razonsocial,
+            String direccion,
+            String telefono,
+            String email,
+            String web,
+            int saldo,
+            boolean estado
+
+        ){
+
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "INSERT INTO t_operador(var_cod_operador, var_ruc, var_razonsocial, var_direccion, "
+                            +"var_telefono, var_email, var_web, num_saldo, bol_estado) VALUES(?,?,?,?,?,?,?,?,?)",
+                            new String[]{"var_cod_operador"});
+                    ps.setString(1, codigo);
+                    ps.setString(2, ruc);
+                    ps.setObject(3, razonsocial);
+                    ps.setObject(4, direccion);
+                    ps.setString(5, telefono);
+                    ps.setString(6, email);
+                    ps.setString(7, web);
+                    ps.setInt(8, saldo);
+                    ps.setBoolean(9, estado);
+                    return ps;
+                });
+        insertUsuario(email,"",email);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("srl_cod_noticia", "saved" );
+        return obj;
+    }
+
+
+    //Insertando Usuario
+    public Map<String, Object> insertUsuario(
+            String usuario,
+            String clave,
+            String email
+    ){
+        KeyHolder keyHolder = new GeneratedKeyHolder();
+
+        jdbcTemplate.update(
+                connection -> {
+                    PreparedStatement ps = connection.prepareStatement(
+                            "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email) VALUES(?,?,?,?)",
+                            new String[]{"srl_cod_usuario"});
+                    ps.setString(1, usuario);
+                    ps.setString(2, clave);
+                    ps.setBoolean(3, true);;
+                    ps.setString(4, email);
+                    return ps;
+                }, keyHolder);
+
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("srl_cod_usuario", keyHolder.getKey() );
+        return obj;
+    }
+
     //Insertando noticias
     public Map<String, Object> insertNews( String titulo, String contenido, LocalDate date, String user ){
         KeyHolder keyHolder = new GeneratedKeyHolder();
@@ -340,10 +403,19 @@ public class ListRepository {
     // ************************ Listando con parametros ***********************************
 
     // Validando usuario
-    public List<Map<String, Object>> showLoginUser( String user, String pwd ){
+    public Map<String, Object> showLoginUser( String user, String pwd ){
+        Map<String,Object> map= new HashMap<String,Object>();
         List<Map<String, Object>> list =
-            jdbcTemplate.queryForList("SELECT * FROM t_usuario WHERE var_usuario = ? AND var_clave = ? AND bol_estado = '1'", user, pwd);
-        return list;
+            jdbcTemplate.queryForList("SELECT * FROM t_usuario u "
+                    +"INNER JOIN t_operador o ON u.var_email = o.var_email "
+                    +"WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+        if ( list.size() > 0 ) {
+            map.put("user", list.get(0));
+            return map;
+        }else{
+            map.put("error","No se ha encontrado usuario");
+            return map;
+        }
     }
 
     // Consultando operador
@@ -445,6 +517,12 @@ public class ListRepository {
 
     // ************************************ Listando ***********************************
 
+    // lista los usuarios
+    public List<Map<String, Object>> showListUsuarios(){
+        List<Map<String, Object>> list_usuarios =  jdbcTemplate.queryForList("SELECT * FROM t_usuario");
+        return list_usuarios;
+    }
+
     // lista los visitantes
         public List<Map<String, Object>> showListVisitantes(){
         List<Map<String, Object>> list_visitantes =  jdbcTemplate.queryForList("SELECT * FROM t_visitante"); 
@@ -492,7 +570,13 @@ public class ListRepository {
         List<Map<String, Object>> list_grupos =  jdbcTemplate.queryForList("SELECT * FROM t_grupo"); 
         return list_grupos;
     }
-    
+
+    // lista de grupos
+    public List<Map<String, Object>> showListOperadores(){
+        List<Map<String, Object>> list_grupos =  jdbcTemplate.queryForList("SELECT * FROM t_operador");
+        return list_grupos;
+    }
+
 
     // ****************************** Fin listando ******************************************+
 

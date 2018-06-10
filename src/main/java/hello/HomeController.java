@@ -148,6 +148,51 @@ public class HomeController {
     // ************************ Insertando registros ******************************************
 
     //Insertando noticias
+    @RequestMapping(value = "/insert_operador", produces = "application/json")
+    @ResponseBody
+    public List<Map<String, Object>> insert_news(
+            // required params
+            @RequestParam String codigo,
+            @RequestParam String ruc,
+            @RequestParam String razonsocial,
+            @RequestParam String direccion,
+            @RequestParam String telefono,
+            @RequestParam String email,
+            @RequestParam String web,
+            @RequestParam int saldo,
+            @RequestParam boolean estado
+    ) {
+        listRepository.insertOperador(
+                codigo,
+                ruc,
+                razonsocial,
+                direccion,
+                telefono,
+                email,
+                web,
+                saldo,
+                estado
+        );
+        System.out.println("insert the id:" + codigo);
+        return listRepository.showListOperadores();
+    }
+
+
+    //Insertando noticias
+    @RequestMapping(value = "/insert_usuario", produces = "application/json")
+    @ResponseBody
+    public List<Map<String, Object>> insert_usuario(
+            // required params
+            @RequestParam String email,
+            @RequestParam String clave
+
+    ) {
+        Map obj = listRepository.insertUsuario(email,clave,email);
+        System.out.println("insert the id:" + obj);
+        return listRepository.showListUsuarios();
+    }
+
+    //Insertando noticias
     @RequestMapping(value = "/insert_news", produces = "application/json")
     @ResponseBody
     public List<Map<String, Object>> insert_news(
@@ -409,7 +454,7 @@ public class HomeController {
     // Validando usuario
     @RequestMapping(value = "/login_user", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> login_user(
+    public Map<String, Object> login_user(
             // required params
             @RequestParam String user,
             @RequestParam String pwd
@@ -662,7 +707,7 @@ public class HomeController {
             String filename = storageService.store(image);
             map.put("message", filename);
         }else{
-            map.put("message", "Tipo de Archivo no aceptado");
+            map.put("error", "Tipo de Archivo no aceptado");
         }
         return map;
     }
