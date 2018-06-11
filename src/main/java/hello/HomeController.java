@@ -703,7 +703,10 @@ public class HomeController {
         Map<String,Object> map = new HashMap<String, Object>();
 
         System.out.println("Uploading File============= " +  image.getContentType());
-        if ( image.getContentType().equals("image/jpeg") ||   image.getContentType().equals("image/png") ){
+        if (
+                image.getContentType().equals("image/jpeg")
+                || image.getContentType().equals("image/png")
+                ||   image.getContentType().equals("application/pdf") ){
             String filename = storageService.store(image);
             map.put("message", filename);
         }else{
