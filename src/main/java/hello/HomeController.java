@@ -257,7 +257,7 @@ public class HomeController {
     //Insertando pagos
     @RequestMapping(value = "/insert_pago", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> insert_pago(
+    public Map<String, Object> insert_pago(
             // required params
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecAbono,
             @RequestParam String codOperador,
@@ -265,8 +265,8 @@ public class HomeController {
             @RequestParam Integer monto,
             @RequestParam String voucher
     ) {
-        System.out.println("insert the id:" + listRepository.insertPago(codOperador, nroOperacion, monto, fecAbono, voucher));
-        return listRepository.showConsultaPagoOperador(codOperador);
+        System.out.println("insert the pago:" + monto);
+        return listRepository.insertPago(codOperador, nroOperacion, monto, fecAbono, voucher);
     }
 
 

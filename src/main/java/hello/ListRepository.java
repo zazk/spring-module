@@ -288,9 +288,11 @@ public class ListRepository {
                 ps.setInt(6, 1);
                 return ps;
             }, keyHolder);
-
+        updateSaldoOperador(codOperador,monto,true);
         Map<String, Object> obj = new HashMap<String,Object>();
         obj.put("srl_cod_pago", keyHolder.getKey() );
+        obj.put("pago", showConsultaPago( keyHolder.getKey().intValue() ));
+        obj.put("operador", showConsultaOperador( codOperador).get(0));
         return obj;
     }
 
@@ -397,6 +399,24 @@ public class ListRepository {
         return obj;
     }
 
+    // agregar pago
+    public Map<String, Object> updateSaldoOperador( String codOperador, Integer monto ,  boolean agregar ){
+        Map<String,Object> operador = showConsultaOperador( codOperador).get(0);
+        System.out.println(" ========= Here is my Saldo" + operador.get("num_saldo") );
+        Integer saldo = Integer.parseInt( operador.get("num_saldo").toString() );
+        if (agregar){
+            saldo = saldo + monto;
+        }else {
+            saldo = saldo - monto;
+        }
+        int status = jdbcTemplate.update(
+                "UPDATE t_operador SET num_saldo = ? WHERE var_cod_operador = ? ", saldo, codOperador);
+        Map<String, Object> obj = new HashMap<String,Object>();
+        obj.put("id", status);
+        obj.put("operador", operador.put("num_saldo",saldo));
+        return obj;
+    }
+
 
     // *********************** Fin Actualizar registros *********************************************
 
@@ -444,6 +464,14 @@ public class ListRepository {
         List<Map<String, Object>> list =
            jdbcTemplate.queryForList("SELECT * FROM t_visitante WHERE srl_cod_visitante = ? ", codGrupo);
         return list;
+    }
+
+
+    // Consultando Pago
+    public Map<String, Object> showConsultaPago( Integer codPago ){
+        List<Map<String, Object>> list =
+                jdbcTemplate.queryForList("SELECT * FROM t_pago WHERE srl_cod_pago = ? ", codPago);
+        return list.get(0);
     }
 
 
