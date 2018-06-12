@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import hello.storage.StorageService;
+import hello.entities.Grupo;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -223,6 +224,19 @@ public class HomeController {
     ) {
         System.out.println("insert the id:" + listRepository.insertVisitante(codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo));
         return listRepository.showListVisitantes();
+    }
+
+    //Insertando grupos
+    @RequestMapping(value = "/insert_grupo_full", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> insert_grupo_full(
+            // required params
+            @RequestParam Grupo grupo
+    ) {
+        System.out.println("insert the id:" + grupo);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("post", grupo);
+        return map;
     }
 
     //Insertando grupos
