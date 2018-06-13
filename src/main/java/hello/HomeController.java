@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hello.entities.Visitante;
 import hello.storage.StorageService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -254,6 +255,18 @@ public class HomeController {
         return listRepository.showVisitantexGrupo(codGrupo);
     }
 
+    //Insertando visitantes al grupos
+    @RequestMapping(value = "/insert_visitantes", produces = "application/json")
+    @ResponseBody
+    public Visitante[] insert_visitantegrupo(
+            // required params
+            @RequestParam Visitante[] visitantes,
+            @RequestParam Integer codGrupo
+    ) {
+        //System.out.println("insert the id:" + listRepository.insertVisitanteGrupo(codGrupo, codVisitante));
+        return visitantes;
+    }
+
     //Insertando pagos
     @RequestMapping(value = "/insert_pago", produces = "application/json")
     @ResponseBody
@@ -428,21 +441,29 @@ public class HomeController {
         return listRepository.showConsultaGrupo(codGrupo);
     }
 
+    // Aprobar pago
+    @RequestMapping(value = "/update_pagoaprobado", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> update_pagoaprobado(
+            // required params
+            @RequestParam Integer codPago
+    ) {
+        //Get from Query with Params
+        System.out.println("update_pagoaprobado -- Update the id:" + codPago);
+        return listRepository.updatePagoAprobado(codPago);
+    }
 
     // Rechazar pago
     @RequestMapping(value = "/update_pagorechazo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_pagorechazo(
+    public Map<String, Object> update_pagorechazo(
             // required params
-            @RequestParam String codOperador,
             @RequestParam Integer codPago,
-            @RequestParam Integer estado,
             @RequestParam String motivoRechazo
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.updatePagoRechazo(estado, motivoRechazo, codPago));
         System.out.println("Update the id:" + codPago);
-        return listRepository.showConsultaPagoOperador(codOperador);
+        return listRepository.updatePagoRechazo(codPago, motivoRechazo);
     }
 
 
