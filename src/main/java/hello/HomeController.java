@@ -1,11 +1,13 @@
 package hello;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import hello.entities.Visitante;
 import hello.storage.StorageService;
 import hello.entities.Grupo;
 import org.springframework.http.HttpHeaders;
@@ -20,6 +22,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 public class HomeController {
@@ -231,11 +235,29 @@ public class HomeController {
     @ResponseBody
     public Map<String, Object> insert_grupo_full(
             // required params
-            @RequestParam Grupo grupo
+            @RequestParam String grupo
     ) {
+        
         System.out.println("insert the id:" + grupo);
+
+        Gson gson = new GsonBuilder().create();
+
+        Grupo g = gson.fromJson(grupo, Grupo.class);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha = LocalDate.parse(g.getFecha(), formatter);
+    
+        Map obj = listRepository.insertGrupo(g.getCodOperador(), 
+           Integer.parseInt(g.getRuta()), fecha, 
+           g.getVisitantes().length, g.getCosto(), g.getCodOperador());
+        
+        
+        for( int i = 0; i < g.getVisitantes().length; i++){
+            // TODO
+        }
+
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("post", grupo);
+        map.put("grupo",  g);
         return map;
     }
 
@@ -266,6 +288,18 @@ public class HomeController {
     ) {
         System.out.println("insert the id:" + listRepository.insertVisitanteGrupo(codGrupo, codVisitante));
         return listRepository.showVisitantexGrupo(codGrupo);
+    }
+
+    //Insertando visitantes al grupos
+    @RequestMapping(value = "/insert_visitantes", produces = "application/json")
+    @ResponseBody
+    public Visitante[] insert_visitantegrupo(
+            // required params
+            @RequestParam Visitante[] visitantes,
+            @RequestParam Integer codGrupo
+    ) {
+        //System.out.println("insert the id:" + listRepository.insertVisitanteGrupo(codGrupo, codVisitante));
+        return visitantes;
     }
 
     //Insertando pagos
@@ -442,21 +476,29 @@ public class HomeController {
         return listRepository.showConsultaGrupo(codGrupo);
     }
 
+    // Aprobar pago
+    @RequestMapping(value = "/update_pagoaprobado", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> update_pagoaprobado(
+            // required params
+            @RequestParam Integer codPago
+    ) {
+        //Get from Query with Params
+        System.out.println("update_pagoaprobado -- Update the id:" + codPago);
+        return listRepository.updatePagoAprobado(codPago);
+    }
 
     // Rechazar pago
     @RequestMapping(value = "/update_pagorechazo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_pagorechazo(
+    public Map<String, Object> update_pagorechazo(
             // required params
-            @RequestParam String codOperador,
             @RequestParam Integer codPago,
-            @RequestParam Integer estado,
             @RequestParam String motivoRechazo
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.updatePagoRechazo(estado, motivoRechazo, codPago));
         System.out.println("Update the id:" + codPago);
-        return listRepository.showConsultaPagoOperador(codOperador);
+        return listRepository.updatePagoRechazo(codPago, motivoRechazo);
     }
 
 
@@ -627,6 +669,15 @@ public class HomeController {
 
 
     // ******************************* Listando ***************************************
+
+    // Lista visitantes
+    @RequestMapping(value = "/list_pagos", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public List<Map<String, Object>> list_pagos() {
+        //Get from Query
+        System.out.println(listRepository.showListPagos());
+        return listRepository.showListPagos();
+    }
 
     // Lista visitantes
     @RequestMapping(value = "/list_visitantes", method = RequestMethod.GET, produces = "application/json")
