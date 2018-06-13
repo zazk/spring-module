@@ -479,6 +479,19 @@ public class HomeController {
     }
 
 
+    // Validando usuario
+    @RequestMapping(value = "/login_sernanp", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> login_sernanp(
+            // required params
+            @RequestParam String user,
+            @RequestParam String pwd
+    ) {
+        //Get from Query with Params
+        System.out.println(listRepository.showLoginUser(user, pwd));
+        return listRepository.showLoginSernanp(user, pwd);
+    }
+
     // Consulta operador
     @RequestMapping(value = "/consulta_operador", produces = "application/json")
     @ResponseBody

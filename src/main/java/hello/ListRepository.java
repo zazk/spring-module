@@ -19,13 +19,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ListRepository {
-	
+
 	@PersistenceContext
     protected EntityManager entityManager;
 
     @Autowired(required = true)
     private JdbcTemplate jdbcTemplate;
-    
+
     public EntityManager getEntityManager() {
         return entityManager;
     }
@@ -229,7 +229,7 @@ public class ListRepository {
         return obj;
     }
 
-    //Insertando grupos 
+    //Insertando grupos
     public Map<String, Object> insertGrupo( String codOperador, Integer codRuta, LocalDate fecProgramada, Integer nroVisitantes, Integer numCosto, String insUsuario ){
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -272,7 +272,7 @@ public class ListRepository {
     }
 
 
-    //Insertando pagos 
+    //Insertando pagos
     public Map<String, Object> insertPago( String codOperador, String nroOperacion, Integer monto, LocalDate fecAbono, String voucher ){
         KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -437,6 +437,21 @@ public class ListRepository {
             return map;
         }
     }
+    // Validando usuario
+    public Map<String, Object> showLoginSernanp( String user, String pwd ){
+        Map<String,Object> map= new HashMap<String,Object>();
+        List<Map<String, Object>> list =
+            jdbcTemplate.queryForList("SELECT * FROM t_usuario u "
+                    +"WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+        if ( list.size() > 0 ) {
+            map.put("user", list.get(0));
+            return map;
+        }else{
+            map.put("error","No se ha encontrado usuario");
+            return map;
+        }
+    }
+
 
     // Consultando operador
     public List<Map<String, Object>> showConsultaOperador( String codOperador ){
@@ -501,7 +516,7 @@ public class ListRepository {
     // Filtro Pagos ************* OPERADOR ***************+
     public List<Map<String, Object>> showFiltroPagoOperador( String nroOperacion, String fecPago, Integer estado ){
         String query = "SELECT * FROM t_pago WHERE ";
-        
+
         String qOperacion = ((nroOperacion == "")?"": " var_operacion = '" + nroOperacion + "'" + ((estado == 0)?"":" AND ")) ;
         String qEstado = ((estado == 0)?"":" int_estado = " + estado + ((fecPago == "")?"":" AND "));
         String qFecha = (fecPago == "")?"":" dte_fec_abono = '" + fecPago + "'";
@@ -515,7 +530,7 @@ public class ListRepository {
     // Filtro Pagos ************** RECAUDADOR ***************
     public List<Map<String, Object>> showFiltroPagoRecaudador( String nroOperacion, String codOperador ){
         String query = "SELECT * FROM t_pago WHERE ";
-        
+
         String qOperacion = ((nroOperacion == "")?"": " var_operacion = '" + nroOperacion + "'" + ((codOperador == "")?"":" AND ")) ;
         String qOperador = (codOperador == "")?"":" var_cod_operador = '" + codOperador + "'";
 
@@ -528,7 +543,7 @@ public class ListRepository {
     // Filtro Grupos *************** OPERADOR *******************
     public List<Map<String, Object>> showFiltroGrupoOperador( String codGrupo, String fecVisita, Integer estado ){
         String query = "SELECT * FROM t_grupo WHERE ";
-        
+
         String qGrupo = ((codGrupo == "")?"": " srl_cod_grupo = " + codGrupo + ((estado == 0)?"":" AND ")) ;
         String qEstado = ((estado == 0)?"":" int_estado = " + estado + ((fecVisita == "")?"":" AND "));
         String qFecha = (fecVisita == "")?"":" dte_fec_programada = '" + fecVisita + "'";
@@ -541,7 +556,7 @@ public class ListRepository {
 
 
     // ******************************* Fin listando con parametros *******************************
-    
+
 
     // ************************************ Listando ***********************************
 
@@ -553,49 +568,49 @@ public class ListRepository {
 
     // lista los visitantes
         public List<Map<String, Object>> showListVisitantes(){
-        List<Map<String, Object>> list_visitantes =  jdbcTemplate.queryForList("SELECT * FROM t_visitante"); 
+        List<Map<String, Object>> list_visitantes =  jdbcTemplate.queryForList("SELECT * FROM t_visitante");
         return list_visitantes;
     }
 
     // lista las rutas
         public List<Map<String, Object>> showListRutas(){
-        List<Map<String, Object>> list_rutas =  jdbcTemplate.queryForList("SELECT * FROM t_ruta"); 
+        List<Map<String, Object>> list_rutas =  jdbcTemplate.queryForList("SELECT * FROM t_ruta");
         return list_rutas;
     }
 
     // lista las categorias
         public List<Map<String, Object>> showListCategorias(){
-        List<Map<String, Object>> list_categorias =  jdbcTemplate.queryForList("SELECT * FROM t_categoria"); 
+        List<Map<String, Object>> list_categorias =  jdbcTemplate.queryForList("SELECT * FROM t_categoria");
         return list_categorias;
     }
 
     // lista los paises
         public List<Map<String, Object>> showListPaises(){
-        List<Map<String, Object>> list_paises =  jdbcTemplate.queryForList("SELECT * FROM t_pais"); 
+        List<Map<String, Object>> list_paises =  jdbcTemplate.queryForList("SELECT * FROM t_pais");
         return list_paises;
     }
 
     // lista los documentos
         public List<Map<String, Object>> showListTipdocumentos(){
-        List<Map<String, Object>> list_tipdocumentos =  jdbcTemplate.queryForList("SELECT * FROM t_tip_documento"); 
+        List<Map<String, Object>> list_tipdocumentos =  jdbcTemplate.queryForList("SELECT * FROM t_tip_documento");
         return list_tipdocumentos;
     }
 
     // lista las noticias
         public List<Map<String, Object>> showListNoticias(){
-        List<Map<String, Object>> list_noticias =  jdbcTemplate.queryForList("SELECT * FROM t_noticia"); 
+        List<Map<String, Object>> list_noticias =  jdbcTemplate.queryForList("SELECT * FROM t_noticia");
         return list_noticias;
     }
 
     // lista las noticias activas
         public List<Map<String, Object>> showListNoticiasActivas(){
-        List<Map<String, Object>> list_noticias_activas =  jdbcTemplate.queryForList("SELECT * FROM t_noticia WHERE bol_activo='1'"); 
+        List<Map<String, Object>> list_noticias_activas =  jdbcTemplate.queryForList("SELECT * FROM t_noticia WHERE bol_activo='1'");
         return list_noticias_activas;
     }
 
     // lista de grupos
         public List<Map<String, Object>> showListGrupos(){
-        List<Map<String, Object>> list_grupos =  jdbcTemplate.queryForList("SELECT * FROM t_grupo"); 
+        List<Map<String, Object>> list_grupos =  jdbcTemplate.queryForList("SELECT * FROM t_grupo");
         return list_grupos;
     }
 
@@ -610,13 +625,13 @@ public class ListRepository {
 
 
     public List<Map<String, Object>> showListStoreProcedures(){
-		List<Map<String, Object>> list =  jdbcTemplate.queryForList("SELECT * from get_books()"); 
+		List<Map<String, Object>> list =  jdbcTemplate.queryForList("SELECT * from get_books()");
     	return list;
     }
 
     public void updateRow( String name, int id){
 		jdbcTemplate.update(
-                "update books set title = ? where id = ?", 
+                "update books set title = ? where id = ?",
                 name, id);
     }
 }
