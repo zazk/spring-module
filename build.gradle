@@ -51,7 +51,9 @@ dependencies {
     compile "org.springframework.boot:spring-boot-devtools:$springBootVersion"
     runtime 'org.postgresql:postgresql:42.1.1'
     compile 'commons-lang:commons-lang:2.3'
-	providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
+    compile 'com.google.code.gson:gson:2.4'
+
+  providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
 }
 
 flyway {

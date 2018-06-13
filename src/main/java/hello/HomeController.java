@@ -1,6 +1,7 @@
 package hello;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -21,6 +22,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 @Controller
 public class HomeController {
@@ -232,11 +235,29 @@ public class HomeController {
     @ResponseBody
     public Map<String, Object> insert_grupo_full(
             // required params
-            @RequestParam Grupo grupo
+            @RequestParam String grupo
     ) {
+        
         System.out.println("insert the id:" + grupo);
+
+        Gson gson = new GsonBuilder().create();
+
+        Grupo g = gson.fromJson(grupo, Grupo.class);
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate fecha = LocalDate.parse(g.getFecha(), formatter);
+    
+        Map obj = listRepository.insertGrupo(g.getCodOperador(), 
+           Integer.parseInt(g.getRuta()), fecha, 
+           g.getVisitantes().length, g.getCosto(), g.getCodOperador());
+        
+        
+        for( int i = 0; i < g.getVisitantes().length; i++){
+            // TODO
+        }
+
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("post", grupo);
+        map.put("grupo",  g);
         return map;
     }
 

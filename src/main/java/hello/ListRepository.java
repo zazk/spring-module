@@ -223,8 +223,10 @@ public class ListRepository {
             return ps;
         }, keyHolder);
 
+        Map grupo = showGrupo( Integer.parseInt( keyHolder.getKey().toString() ) ) ;
+
         Map<String, Object> obj = new HashMap<String, Object>();
-        obj.put("srl_cod_grupo", keyHolder.getKey());
+        obj.put("grupo", grupo );
         return obj;
     }
 
@@ -440,6 +442,12 @@ public class ListRepository {
         List<Map<String, Object>> list = jdbcTemplate
                 .queryForList("SELECT * FROM t_operador WHERE var_cod_operador = ? ", codOperador);
         return list;
+    }
+
+    public Map<String, Object> showGrupo(Integer codGrupo) {
+        List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM t_grupo WHERE srl_cod_grupo = ?",
+                codGrupo);
+        return list.get(0);
     }
 
     // Consultando operador x usuario
