@@ -637,6 +637,15 @@ public class HomeController {
     // ******************************* Listando ***************************************
 
     // Lista visitantes
+    @RequestMapping(value = "/list_pagos", method = RequestMethod.GET, produces = "application/json")
+    @ResponseBody
+    public List<Map<String, Object>> list_pagos() {
+        //Get from Query
+        System.out.println(listRepository.showListPagos());
+        return listRepository.showListPagos();
+    }
+
+    // Lista visitantes
     @RequestMapping(value = "/list_visitantes", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
     public List<Map<String, Object>> list_visitantes() {

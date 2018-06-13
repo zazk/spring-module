@@ -601,6 +601,12 @@ public class ListRepository {
         List<Map<String, Object>> list_grupos = jdbcTemplate.queryForList("SELECT * FROM t_operador");
         return list_grupos;
     }
+    // lista de pagos
+    public List<Map<String, Object>> showListPagos() {
+        List<Map<String, Object>> list_pagos = jdbcTemplate.queryForList(
+            "SELECT p.*,o.var_razonsocial FROM t_pago p INNER JOIN t_operador o ON o.var_cod_operador = p.var_cod_operador");
+        return list_pagos;
+    }
 
     // ****************************** Fin listando
     // ******************************************+
