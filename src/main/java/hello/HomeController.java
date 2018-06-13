@@ -488,7 +488,7 @@ public class HomeController {
             @RequestParam String pwd
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.showLoginUser(user, pwd));
+        System.out.println(listRepository.showLoginSernanp(user, pwd));
         return listRepository.showLoginSernanp(user, pwd);
     }
 
