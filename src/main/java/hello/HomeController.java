@@ -406,7 +406,7 @@ public class HomeController {
     // Editando grupo
     @RequestMapping(value = "/update_grupo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_grupo(
+    public Map<String, Object> update_grupo(
             // required params
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
             @RequestParam Integer codRuta,
@@ -421,7 +421,7 @@ public class HomeController {
     // Tomar Asistencia al grupo
     @RequestMapping(value = "/update_asistencia", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_asistencia(
+    public Map<String, Object> update_asistencia(
             // required params
             @RequestParam Integer codGrupo,
             @RequestParam Integer codVisitante,
@@ -436,7 +436,7 @@ public class HomeController {
     // Verifica visita del grupo
     @RequestMapping(value = "/update_visitagrupo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_visitagrupo(
+    public Map<String, Object> update_visitagrupo(
             // required params
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
             @RequestParam Integer nroVisitantes,
@@ -458,7 +458,7 @@ public class HomeController {
     // Agregar documento al grupo
     @RequestMapping(value = "/update_docgrupo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> update_docgrupo(
+    public Map<String, Object> update_docgrupo(
             // required params
             @RequestParam Integer codGrupo,
             @RequestParam String documento
@@ -569,13 +569,15 @@ public class HomeController {
     // Consulta Grupo
     @RequestMapping(value = "/consulta_grupo", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> consulta_grupo(
+    public Map<String, Object> consulta_grupo(
             // required params
             @RequestParam Integer codGrupo
     ) {
         //Get from Query with Params
         System.out.println(listRepository.showConsultaGrupo(codGrupo));
-        return listRepository.showConsultaGrupo(codGrupo);
+        Map grupo = new HashMap<>();
+        grupo.put("grupo", listRepository.showConsultaGrupo(codGrupo));
+        return grupo;
     }
 
 

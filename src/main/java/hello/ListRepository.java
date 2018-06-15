@@ -501,6 +501,22 @@ public class ListRepository {
     }
   }
 
+
+  // Validando usuario
+  public Map<String, Object> showLoginSernanp(String user, String pwd) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    List<Map<String, Object>> list = jdbcTemplate
+      .queryForList("SELECT * FROM t_usuario u "
+        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+    if (list.size() > 0) {
+      map.put("user", list.get(0));
+      return map;
+    } else {
+      map.put("error", "No se ha encontrado usuario");
+      return map;
+    }
+  }
+
   // Consultando operador
   public List<Map<String, Object>> showConsultaOperador(String codOperador) {
     List<Map<String, Object>> list = jdbcTemplate
@@ -529,10 +545,17 @@ public class ListRepository {
   }
 
   // Consultando Grupo
-  public List<Map<String, Object>> showConsultaGrupo(Integer codGrupo) {
+  public Map showConsultaGrupo(Integer codGrupo) {
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_visitante WHERE srl_cod_visitante = ? ", codGrupo);
-    return list;
+      .queryForList("SELECT v.* "+
+      "FROM t_visitante v "+
+      "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_visitante = v.srl_cod_visitante  "+
+      "INNER JOIN t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo "+
+      "WHERE "+
+      "g.srl_cod_grupo  = ? ", codGrupo);
+      Map grupo = showGrupo( codGrupo);
+      grupo.put("visitantes", list);
+    return grupo;
   }
 
   // Consultando Pago
