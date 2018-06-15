@@ -237,7 +237,7 @@ public class HomeController {
             // required params
             @RequestParam String grupo
     ) {
-        
+
         System.out.println("insert the id:" + grupo);
 
         Gson gson = new GsonBuilder().create();
@@ -246,18 +246,11 @@ public class HomeController {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fecha = LocalDate.parse(g.getFecha(), formatter);
-    
-        Map obj = listRepository.insertGrupo(g.getCodOperador(), 
-           Integer.parseInt(g.getRuta()), fecha, 
-           g.getVisitantes().length, g.getCosto(), g.getCodOperador());
-        
-        
-        for( int i = 0; i < g.getVisitantes().length; i++){
-            // TODO
-        }
+
+        Map obj = listRepository.insertGrupoConVisitantes(g, fecha);
 
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("grupo",  g);
+        map.put("grupo",  obj);
         return map;
     }
 

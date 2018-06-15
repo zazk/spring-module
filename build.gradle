@@ -20,6 +20,7 @@ apply plugin: 'org.springframework.boot'
 apply plugin: 'flyway'
 apply plugin: 'eclipse'
 apply plugin: 'maven'
+apply plugin: 'idea'
 
 group = 'pe.gob.sernanp'
 version = '0.1-SNAPSHOT'

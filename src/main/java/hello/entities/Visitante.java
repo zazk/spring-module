@@ -8,6 +8,25 @@ public class Visitante {
   private String nacimiento;
   private String genero;
   private String categoria;
+  private String pais;
+  private String sexo;
+
+  public String getSexo() {
+    return sexo;
+  }
+
+  public void setSexo(String sexo) {
+    this.sexo = sexo;
+  }
+
+  public String getPais() {
+
+    return pais;
+  }
+
+  public void setPais(String pais) {
+    this.pais = pais;
+  }
 
   public String getNombres() {
     return nombres;
