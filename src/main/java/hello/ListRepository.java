@@ -575,7 +575,10 @@ public class ListRepository {
 
   // Consultando Grupos ************* OPERADOR ******************
   public List<Map<String, Object>> showConsultaGrupoOperador(String codOperador) {
-    List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM t_grupo WHERE var_cod_operador = ?",
+    List<Map<String, Object>> list = jdbcTemplate.queryForList(
+      "SELECT * FROM t_grupo "
+
+      +" WHERE var_cod_operador = ?",
       codOperador);
     return list;
   }
