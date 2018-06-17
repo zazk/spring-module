@@ -1,6 +1,6 @@
-package hello;
+package pe.gob.sernanp.pda;
 
-import hello.storage.StorageProperties;
+import pe.gob.sernanp.pda.storage.StorageProperties;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.boot.builder.SpringApplicationBuilder;
@@ -23,7 +23,7 @@ public class Application extends SpringBootServletInitializer {
 	protected SpringApplicationBuilder configure(SpringApplicationBuilder application) {
 		return application.sources(Application.class);
     }
-    
+
     public static void main(String[] args) {
         SpringApplication.run(Application.class, args);
     }

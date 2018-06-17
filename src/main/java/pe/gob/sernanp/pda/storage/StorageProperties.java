@@ -1,4 +1,4 @@
-package hello.storage;
+package pe.gob.sernanp.pda.storage;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

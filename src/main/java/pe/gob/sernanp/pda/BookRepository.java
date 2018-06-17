@@ -1,4 +1,4 @@
-package hello;
+package pe.gob.sernanp.pda;
 
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;

@@ -1,4 +1,4 @@
-package hello.storage;
+package pe.gob.sernanp.pda.storage;
 
 public class StorageFileNotFoundException extends StorageException {
 

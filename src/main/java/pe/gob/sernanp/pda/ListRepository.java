@@ -1,8 +1,9 @@
-package hello;
+package pe.gob.sernanp.pda;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -11,8 +12,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -21,8 +20,8 @@ import org.springframework.stereotype.Repository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-import hello.entities.Grupo;
-import hello.entities.Visitante;
+import pe.gob.sernanp.pda.entities.Grupo;
+import pe.gob.sernanp.pda.entities.Visitante;
 
 @Repository
 public class ListRepository {
@@ -188,13 +187,14 @@ public class ListRepository {
 
   // Insertando visitantes
   public Map<String, String> insertVisitante(Integer codDocumento, Integer codCategoria, Integer codPais,
-                                             String nombre, String apellido, String nroDocumento, LocalDate fNac, Integer sexo) {
+                                             String nombre, String apellido, String nroDocumento, LocalDate fNac, String sexo) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
+    Map<String, String> obj = new HashMap<>();
     System.out.println("insertVisitante  ============================ " + codDocumento);
 
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO t_visitante(srl_cod_documento, srl_cod_categoria, srl_cod_pais, var_nombre, var_apellido, var_nro_documento, dte_fec_nacimiento, bol_sexo) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
+        "INSERT INTO t_visitante(srl_cod_documento, srl_cod_categoria, srl_cod_pais, var_nombre, var_apellido, var_nro_documento, dte_fec_nacimiento, var_sexo) VALUES (?, ?, ?, ?, ?, ?, ?, ?);",
         new String[]{"srl_cod_visitante"});
       ps.setInt(1, codDocumento);
       ps.setInt(2, codCategoria);
@@ -203,20 +203,20 @@ public class ListRepository {
       ps.setString(5, apellido);
       ps.setString(6, nroDocumento);
       ps.setObject(7, fNac);
-      ps.setInt(8, sexo);
+      ps.setString(8, sexo);
       return ps;
     }, keyHolder);
 
-    Map<String, String> obj = new HashMap<>();
     obj.put("srl_cod_visitante", keyHolder.getKey().toString());
     return obj;
   }
 
   // Insertando grupos
   public Map<String, Map<String, Object>> insertGrupo(String codOperador, Integer codRuta, LocalDate fecProgramada,
-                                                      Integer nroVisitantes, Integer numCosto, String insUsuario) {
+                                                      Integer nroVisitantes, Double numCosto, String insUsuario) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
+    System.out.println("================= codOPeRADOR ============: "+ codOperador);
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(
         "INSERT INTO t_grupo(var_cod_operador, srl_cod_ruta, dte_fec_programada, int_nro_visitante, num_costo, int_estado, var_usuario)VALUES (?, ?, ?, ?, ?, ?, ?)",
@@ -225,7 +225,7 @@ public class ListRepository {
       ps.setInt(2, codRuta);
       ps.setObject(3, fecProgramada);
       ps.setInt(4, nroVisitantes);
-      ps.setInt(5, numCosto);
+      ps.setDouble(5, numCosto);
       ps.setInt(6, 1);
       ps.setString(7, insUsuario);
       return ps;
@@ -243,7 +243,7 @@ public class ListRepository {
 
     Map<String, Object> grupo = insertGrupo(g.getCodOperador(),
       Integer.parseInt(g.getRuta()), fecha,
-      g.getVisitantes().length, g.getCosto(), g.getCodOperador()).get("grupo");
+      g.getVisitantes().length, g.getCosto(), g.getCodigo()).get("grupo");
 
     System.out.println("GRUPO INSERTADO" + grupo);
 
@@ -263,7 +263,20 @@ public class ListRepository {
         + v.getTipoDocumento()
         + "TIPO DOCUMENTO PARSED"
         + Integer.parseInt(v.getTipoDocumento())
+        + " CATEGORIA "
+        + v.getCategoria()
+        + " PAIS "
+        + v.getPais()
+        + " SEXO "
+        + v.getSexo()
       );
+      if ( !v.getSexo().equals("M") && !v.getSexo().equals("F")){
+        System.out.println(" >> El sexo debe ser M o F según sea correspondiente.");
+        String msg = "Visitante: El sexo debe ser M o F según sea correspondiente. Usuario Index:" + i;
+        return new HashMap<String, Object>() {{
+          put("error", msg );
+        }};
+      }
 
       String codVisitante = insertVisitante(
         Integer.parseInt(v.getTipoDocumento()),
@@ -273,7 +286,7 @@ public class ListRepository {
         v.getApellidos(),
         v.getDni(),
         fechaNacimiento,
-        Integer.parseInt(v.getSexo())
+        v.getSexo()
       ).get("srl_cod_visitante");
 
       System.out.println("ID VISITANTE INSERTADO ============================" + codVisitante);
@@ -689,9 +702,36 @@ public class ListRepository {
   }
 
   // lista de grupos
-  public List<Map<String, Object>> showListGrupos() {
-    List<Map<String, Object>> list_grupos = jdbcTemplate.queryForList("SELECT * FROM t_grupo");
-    return list_grupos;
+  public List<Grupo> showListGrupos() {
+    List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g\n" +
+      "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo\n" +
+      "GROUP by g.srl_cod_grupo");
+    List<Grupo> grupos = new ArrayList<Grupo>();
+
+
+
+
+
+
+
+    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    //LocalDate fechaNacimiento = LocalDate.parse(v.getNacimiento(), formatter);
+
+
+    for (Map row : rows) {
+      Grupo grupo = new Grupo();
+      System.out.print( " >>> LOCAL DATA GRUPO:" +  row.get("dte_fec_programada").toString() );
+      grupo.setCodOperador( (String) row.get("var_cod_operador")  );
+      grupo.setFecha( row.get("dte_fec_programada").toString()  );
+      grupo.setEstado( (Integer) row.get("int_estado")  );
+      grupo.setCosto( (Double)row.get("num_costo")  );
+      grupo.setCodigo( row.get("srl_cod_grupo").toString()  );
+      grupo.setRuta( row.get("srl_cod_ruta").toString() );
+      grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
+      grupos.add(grupo);
+    }
+    return grupos;
   }
 
   // lista de grupos

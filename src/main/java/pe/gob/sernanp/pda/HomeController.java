@@ -1,26 +1,22 @@
-package hello;
+package pe.gob.sernanp.pda;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import hello.entities.Visitante;
-import hello.storage.StorageService;
-import hello.entities.Grupo;
-import org.springframework.http.HttpHeaders;
+import pe.gob.sernanp.pda.entities.Visitante;
+import pe.gob.sernanp.pda.storage.StorageService;
+import pe.gob.sernanp.pda.entities.Grupo;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.core.io.Resource;
 
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -224,16 +220,16 @@ public class HomeController {
             @RequestParam String nombre,
             @RequestParam String apellido,
             @RequestParam String nroDocumento,
-            @RequestParam Integer sexo
+            @RequestParam String sexo
     ) {
-        System.out.println("insert the id:" + listRepository.insertVisitante(codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo));
+        System.out.println("insert the id:" + listRepository.insertVisitante(codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo) );
         return listRepository.showListVisitantes();
     }
 
     //Insertando grupos
-    @RequestMapping(value = "/insert_grupo_full", produces = "application/json")
+    @RequestMapping(value = "/insert_grupo", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> insert_grupo_full(
+    public Map<String, Object> insert_grupo(
             // required params
             @RequestParam String grupo
     ) {
@@ -247,29 +243,14 @@ public class HomeController {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
         LocalDate fecha = LocalDate.parse(g.getFecha(), formatter);
 
+        System.out.println("GRUPO POST" + g);
+
         Map obj = listRepository.insertGrupoConVisitantes(g, fecha);
 
         Map<String, Object> map = new HashMap<String, Object>();
         map.put("grupo",  obj);
         return map;
     }
-
-    //Insertando grupos
-    @RequestMapping(value = "/insert_grupo", produces = "application/json")
-    @ResponseBody
-    public List<Map<String, Object>> insert_grupo(
-            // required params
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecProgramada,
-            @RequestParam String codOperador,
-            @RequestParam Integer codRuta,
-            @RequestParam Integer nroVisitantes,
-            @RequestParam Integer numCosto,
-            @RequestParam String insUsuario
-    ) {
-        System.out.println("insert the id:" + listRepository.insertGrupo(codOperador, codRuta, fecProgramada, nroVisitantes, numCosto, insUsuario));
-        return listRepository.showConsultaGrupoOperador(codOperador);
-    }
-
 
     //Insertando visitantes al grupos
     @RequestMapping(value = "/insert_visitantegrupo", produces = "application/json")
@@ -738,9 +719,9 @@ public class HomeController {
     }
 
     // Lista de grupos
-    @RequestMapping(value = "/list_grupos", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/list_grupos", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> list_grupos() {
+    public List<Grupo> list_grupos() {
         //Get from Query
         System.out.println(listRepository.showListGrupos());
         return listRepository.showListGrupos();

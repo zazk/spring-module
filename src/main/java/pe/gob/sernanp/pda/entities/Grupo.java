@@ -1,27 +1,31 @@
-package hello.entities;
+package pe.gob.sernanp.pda.entities;
 
 public class Grupo{
 
-  private String codigo;
+  private String id;
+
   private String codOperador;
+  private String codigo;
   private String ruta;
   private String saldo;
   private String fecha;
   private String fechaObservacion;
   private Integer inasistencias;
-  private Integer costo;
+  private Double costo;
   private Integer estado;
   private String documento;
   private String motivoObservado;
   private Visitante[] visitantes;
+  private Long totalVisitantes;
 
-  public String getCodigo() {
-    return codigo;
+  public String getId() {
+    return id;
   }
 
-  public void setCodigo(String codigo) {
-    this.codigo = codigo;
+  public void setId(String id) {
+    this.id = id;
   }
+
 
   public String getCodOperador() {
     return codOperador;
@@ -29,6 +33,14 @@ public class Grupo{
 
   public void setCodOperador(String codOperador) {
     this.codOperador = codOperador;
+  }
+
+  public String getCodigo() {
+    return codigo;
+  }
+
+  public void setCodigo(String codigo) {
+    this.codigo = codigo;
   }
 
   public String getRuta() {
@@ -71,11 +83,11 @@ public class Grupo{
     this.inasistencias = inasistencias;
   }
 
-  public Integer getCosto() {
+  public Double getCosto() {
     return costo;
   }
 
-  public void setCosto(Integer costo) {
+  public void setCosto(Double costo) {
     this.costo = costo;
   }
 
@@ -101,6 +113,14 @@ public class Grupo{
 
   public void setMotivoObservado(String motivoObservado) {
     this.motivoObservado = motivoObservado;
+  }
+
+  public Long getTotalVisitantes() {
+    return totalVisitantes;
+  }
+
+  public void setTotalVisitantes(Long totalVisitantes) {
+    this.totalVisitantes = totalVisitantes;
   }
 
   public void setVisitantes (Visitante[] visitantes){

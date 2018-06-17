@@ -1,4 +1,4 @@
-package hello.entities;
+package pe.gob.sernanp.pda.entities;
 
 public class Visitante {
   private String nombres;
