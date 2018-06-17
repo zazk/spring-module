@@ -240,7 +240,6 @@ public class HomeController {
         System.out.println("insert the id:" + grupo);
 
         Gson gson = new GsonBuilder().create();
-
         Grupo g = gson.fromJson(grupo, Grupo.class);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
@@ -407,14 +406,15 @@ public class HomeController {
     @ResponseBody
     public Grupo update_asistencia(
             // required params
-            @RequestParam Integer codGrupo,
-            @RequestParam Integer codVisitante,
-            @RequestParam Boolean asistio
+            @RequestParam String grupo
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.updateAsistencia(codGrupo, codVisitante, asistio));
-        System.out.println("Update the id:" + codGrupo);
-        return listRepository.showConsultaGrupo(codGrupo);
+
+      Gson gson = new GsonBuilder().create();
+      Grupo g = gson.fromJson(grupo, Grupo.class);
+
+        System.out.println("GRUPO:" +  g);
+        return listRepository.updateAsistenciaGrupo(g);
     }
 
     // Verifica visita del grupo
@@ -757,19 +757,17 @@ public class HomeController {
     public Map<String, Object> handleFileUpload(
             @RequestParam("imagen") MultipartFile image
         ) {
-        Map<String,Object> map = new HashMap<String, Object>();
 
-        System.out.println("Uploading File============= " +  image.getContentType());
-        if (
-                image.getContentType().equals("image/jpeg")
-                || image.getContentType().equals("image/png")
-                ||   image.getContentType().equals("application/pdf") ){
-            String filename = storageService.store(image);
-            map.put("message", filename);
-        }else{
-            map.put("error", "Tipo de Archivo no aceptado");
-        }
-        return map;
+        return uploadFile(image);
+    }
+
+    @RequestMapping(value = "/upload-documento-grupo", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    public Map<String, Object> uploadDocumentoGrupo(
+      @RequestParam("imagen") MultipartFile image
+    ) {
+
+      return uploadFile(image);
     }
 
     @GetMapping("/file/{filename:.+}")
@@ -780,6 +778,22 @@ public class HomeController {
         return file;
         //ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
          //       "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    private Map uploadFile( MultipartFile file){
+      Map<String,Object> map = new HashMap<String, Object>();
+
+      System.out.println("Uploading File============= " +  file.getContentType());
+      if (
+        file.getContentType().equals("image/jpeg")
+          || file.getContentType().equals("image/png")
+          ||   file.getContentType().equals("application/pdf") ){
+        String filename = storageService.store(file);
+        map.put("message", filename);
+      }else{
+        map.put("error", "Tipo de Archivo no aceptado");
+      }
+      return map;
     }
 
 }

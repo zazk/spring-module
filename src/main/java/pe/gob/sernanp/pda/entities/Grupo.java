@@ -4,7 +4,7 @@ import java.util.List;
 
 public class Grupo{
 
-  private String id;
+  private Integer id;
 
   private String codOperador;
   private String codigo;
@@ -20,11 +20,11 @@ public class Grupo{
   private List<Visitante> visitantes;
   private Long totalVisitantes;
 
-  public String getId() {
+  public Integer getId() {
     return id;
   }
 
-  public void setId(String id) {
+  public void setId(Integer id) {
     this.id = id;
   }
 

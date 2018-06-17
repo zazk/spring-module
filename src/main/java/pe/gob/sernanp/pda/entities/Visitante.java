@@ -10,6 +10,15 @@ public class Visitante {
   private String pais;
   private String sexo;
   private Integer id;
+  private Boolean asistio;
+
+  public Boolean getAsistio() {
+    return asistio;
+  }
+
+  public void setAsistio(Boolean asistio) {
+    this.asistio = asistio;
+  }
 
   public Integer getId() {
     return id;

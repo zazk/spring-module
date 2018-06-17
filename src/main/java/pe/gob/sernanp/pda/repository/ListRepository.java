@@ -416,6 +416,23 @@ public class ListRepository {
   }
 
   // Tomando asistencia al grupo
+  public Grupo updateAsistenciaGrupo( Grupo grupo) {
+    int inasistentes = 0;
+    System.out.println("====== Grupo:"+ grupo + " Visitantes: " + grupo.getVisitantes().size() );
+    for (Visitante row : grupo.getVisitantes()) {
+
+      System.out.println("====== Visitante:"+ row+ " Index: "+row.getAsistio() );
+      updateAsistencia( grupo.getId() ,row.getId(),row.getAsistio());
+      if ( !row.getAsistio() ){
+        inasistentes++;
+      }
+    }
+    verificarVisitaGrupo( inasistentes, 2, null, null,grupo.getId());
+
+    return showConsultaGrupo( grupo.getId() );
+  }
+
+  // Tomando asistencia visitante
   public Map<String, Object> updateAsistencia(Integer codGrupo, Integer codVisitante, Boolean asistio) {
     int status = jdbcTemplate.update(
       "UPDATE t_grupo_visitante SET bol_ingreso = ? WHERE srl_cod_grupo = ? AND srl_cod_visitante = ?",
@@ -424,6 +441,26 @@ public class ListRepository {
     obj.put("id", status);
     return obj;
   }
+
+  // Verifica visita del grupo
+  public Map<String, Object> verificarVisitaGrupo(
+    Integer nroInasistentes,
+    Integer estado,
+    String documento,
+    String userModificacion,
+    Integer codGrupo
+  ) {
+
+    int status = jdbcTemplate.update(
+      "UPDATE t_grupo SET int_nro_inasistente = ?, int_estado = ?, var_documento = ?, var_usuariomodificacion = ?, dte_fec_modificacion = now()  " +
+        "WHERE srl_cod_grupo = ? ",
+       nroInasistentes, estado, documento, userModificacion,
+      codGrupo);
+    Map<String, Object> obj = new HashMap<String, Object>();
+    obj.put("id", status);
+    return obj;
+  }
+
 
   // Verifica visita del grupo
   public Map<String, Object> updateVisitaGrupo(LocalDate date, Integer nroVisitantes, Integer nroInasistentes,
@@ -521,6 +558,7 @@ public class ListRepository {
   public Map<String, Object> showGrupo(Integer codGrupo) {
     List<Map<String, Object>> list = jdbcTemplate.queryForList("SELECT * FROM t_grupo WHERE srl_cod_grupo = ?",
       codGrupo);
+
     return list.get(0);
   }
 
@@ -540,6 +578,8 @@ public class ListRepository {
 
   // Consultando Grupo
   public Grupo showConsultaGrupo(Integer codGrupo) {
+    System.out.println("====== showConsultaGrupo( " + codGrupo );
+
     Map<String, Object> grupoMap = jdbcTemplate.queryForMap(
       "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
         "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
@@ -547,22 +587,23 @@ public class ListRepository {
         "GROUP by g.srl_cod_grupo", codGrupo);
 
     Grupo grupo = setGrupoFromMap(grupoMap);
+    grupo.setVisitantes( showVisitantesGrupo( grupo.getId()) );
+    return grupo;
+  }
 
+  public List<Visitante> showVisitantesGrupo( Integer codGrupo){
     List<Map<String, Object>> rows = jdbcTemplate
-      .queryForList("SELECT v.* "+
-      "FROM t_visitante v "+
-      "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_visitante = v.srl_cod_visitante  "+
-      "INNER JOIN t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo "+
-      "WHERE "+
-      "g.srl_cod_grupo  = ? ", codGrupo);
-
+      .queryForList("SELECT v.*,gv.bol_ingreso "+
+        "FROM t_visitante v "+
+        "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_visitante = v.srl_cod_visitante  "+
+        "INNER JOIN t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo "+
+        "WHERE "+
+        "g.srl_cod_grupo  = ? ", codGrupo);
     List<Visitante> visitantes = new ArrayList<Visitante>();
     for (Map row : rows) {
       visitantes.add( setVisitanteFromMap( row ));
     }
-
-    grupo.setVisitantes( visitantes );
-    return grupo;
+    return visitantes;
   }
 
   // Consultando Pago
@@ -717,7 +758,7 @@ public class ListRepository {
     grupo.setFecha( row.get("dte_fec_programada").toString()  );
     grupo.setEstado( (Integer) row.get("int_estado")  );
     grupo.setCosto( (Double)row.get("num_costo")  );
-    grupo.setId( row.get("srl_cod_grupo").toString()  );
+    grupo.setId( (Integer) row.get("srl_cod_grupo")  );
     grupo.setRuta( row.get("srl_cod_ruta").toString() );
     grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
     grupo.setInasistencias( (Integer) row.get("int_nro_inasistente"));
@@ -738,6 +779,7 @@ public class ListRepository {
     visitante.setPais(  row.get("srl_cod_pais").toString() );
     visitante.setSexo( (String) row.get("var_sexo") );
     visitante.setId((Integer) row.get("srl_cod_visitante") );
+    visitante.setAsistio((Boolean) row.get("bol_ingreso") );
 
     return visitante;
   }
