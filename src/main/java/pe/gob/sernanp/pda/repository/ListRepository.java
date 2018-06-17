@@ -40,7 +40,7 @@ public class ListRepository {
   public List<Map> showList() {
     @SuppressWarnings("unchecked")
     List<Map> list = entityManager.createNativeQuery("select * from t_categoria").getResultList();
-    return list;   
+    return list;
   }
 
   // Example with JDBC - The simplest way.
@@ -731,6 +731,7 @@ public class ListRepository {
       grupo.setId( row.get("srl_cod_grupo").toString()  );
       grupo.setRuta( row.get("srl_cod_ruta").toString() );
       grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
+      grupo.setInasistencias( (Integer) row.get("int_nro_inasistente"));
       grupos.add(grupo);
     }
     return grupos;
