@@ -29,6 +29,10 @@ public class ListRepository {
   @PersistenceContext
   protected EntityManager entityManager;
 
+
+  @Autowired
+  private UsuarioRepository usuarioRepository;
+
   @Autowired(required = true)
   private JdbcTemplate jdbcTemplate;
 
@@ -137,32 +141,12 @@ public class ListRepository {
       ps.setBoolean(9, estado);
       return ps;
     });
-    insertUsuario(email, "", email);
+    usuarioRepository.insertUsuario(email, "", email, "operador");
     Map<String, Object> obj = new HashMap<String, Object>();
-    obj.put("srl_cod_noticia", "saved");
+    obj.put("var_cod_operador", codigo);
     return obj;
   }
 
-  // Insertando Usuario
-  public Map<String, Object> insertUsuario(String usuario, String clave, String email) {
-    KeyHolder keyHolder = new GeneratedKeyHolder();
-
-    jdbcTemplate.update(connection -> {
-      PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email) VALUES(?,?,?,?)",
-        new String[]{"srl_cod_usuario"});
-      ps.setString(1, usuario);
-      ps.setString(2, clave);
-      ps.setBoolean(3, true);
-      ;
-      ps.setString(4, email);
-      return ps;
-    }, keyHolder);
-
-    Map<String, Object> obj = new HashMap<String, Object>();
-    obj.put("srl_cod_usuario", keyHolder.getKey());
-    return obj;
-  }
 
   // Insertando noticias
   public Map<String, Object> insertNews(String titulo, String contenido, LocalDate date, String user) {
@@ -515,22 +499,6 @@ public class ListRepository {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
       .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
-        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
-    if (list.size() > 0) {
-      map.put("user", list.get(0));
-      return map;
-    } else {
-      map.put("error", "No se ha encontrado usuario");
-      return map;
-    }
-  }
-
-
-  // Validando usuario
-  public Map<String, Object> showLoginSernanp(String user, String pwd) {
-    Map<String, Object> map = new HashMap<String, Object>();
-    List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_usuario u "
         + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import pe.gob.sernanp.pda.entities.Visitante;
 import pe.gob.sernanp.pda.repository.ListRepository;
+import pe.gob.sernanp.pda.repository.UsuarioRepository;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
 import org.springframework.http.MediaType;
@@ -29,6 +30,9 @@ public class HomeController {
 
     @Autowired
     private ListRepository listRepository;
+
+    @Autowired
+    private UsuarioRepository usuarioRepository;
 
     @Autowired
     public HomeController(StorageService storageService) {
@@ -170,19 +174,27 @@ public class HomeController {
     }
 
 
-    //Insertando noticias
+    //Insertando usuario
     @RequestMapping(value = "/insert_usuario", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> insert_usuario(
+    public Map<String, Object> insert_usuario(
             // required params
             @RequestParam String email,
-            @RequestParam String clave
+            @RequestParam String clave,
+            @RequestParam String rol
 
     ) {
-        Map obj = listRepository.insertUsuario(email,clave,email);
-        System.out.println("insert the id:" + obj);
-        return listRepository.showListUsuarios();
+      Map<String, Object> obj = new HashMap<String, Object>();
+      System.out.println("insert the id:" + obj);
+        if( !rol.equals("recaudador") && !rol.equals("puesto") && !rol.equals("operador")){
+          obj.put("error", "No es el rol indicado");
+          return obj;
+        }
+      obj = usuarioRepository.insertUsuario(email,clave,email, rol);
+      List<Map<String,Object>> l = listRepository.showListUsuarios();
+      return l.get( l.size() - 1 );
     }
+
 
     //Insertando noticias
     @RequestMapping(value = "/insert_news", produces = "application/json")
@@ -495,8 +507,8 @@ public class HomeController {
             @RequestParam String pwd
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.showLoginSernanp(user, pwd));
-        return listRepository.showLoginSernanp(user, pwd);
+        System.out.println(usuarioRepository.showLoginSernanp(user, pwd));
+        return usuarioRepository.showLoginSernanp(user, pwd);
     }
 
     // Consulta operador
