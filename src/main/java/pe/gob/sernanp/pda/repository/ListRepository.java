@@ -219,7 +219,7 @@ public class ListRepository {
       ps.setInt(2, codRuta);
       ps.setObject(3, fecProgramada);
       ps.setInt(4, nroVisitantes);
-      ps.setDouble(5, numCosto);
+      ps.setDouble(5, nroVisitantes*numCosto);
       ps.setInt(6, 1);
       ps.setString(7, insUsuario);
       ps.setString(8, codOperador+"-"+ fecProgramada.getYear()+"-"+ masked );
@@ -238,7 +238,7 @@ public class ListRepository {
 
     Map<String, Object> grupo = insertGrupo(g.getCodOperador(),
       Integer.parseInt(g.getRuta()), fecha,
-      g.getVisitantes().length, g.getCosto(), g.getCodigo()).get("grupo");
+      g.getVisitantes().size(), g.getCosto(), g.getCodigo()).get("grupo");
 
     System.out.println("GRUPO INSERTADO" + grupo);
 
@@ -246,9 +246,9 @@ public class ListRepository {
     System.out.println("Formato Fecha ============================" + g.getVisitantes());
     System.out.println("GRUPO ID INSERTADO ============================" + grupo.get("srl_cod_grupo"));
 
-    for (int i = 0; i < g.getVisitantes().length; i++) {
+    for (int i = 0; i < g.getVisitantes().size(); i++) {
       // TODO
-      Visitante v = g.getVisitantes()[i];
+      Visitante v = g.getVisitantes().get(i);
       LocalDate fechaNacimiento = LocalDate.parse(v.getNacimiento(), formatter);
       // Insert Visitante
       ObjectMapper oMapper = new ObjectMapper();
@@ -512,7 +512,9 @@ public class ListRepository {
   // Consultando operador
   public List<Map<String, Object>> showConsultaOperador(String codOperador) {
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_operador WHERE var_cod_operador = ? ", codOperador);
+      .queryForList("SELECT o.* FROM t_operador o WHERE var_cod_operador = ?  " +
+        "INNER JOIN t_usuario u ON u.var_email = o.var_email "
+        , codOperador);
     return list;
   }
 
@@ -537,16 +539,29 @@ public class ListRepository {
   }
 
   // Consultando Grupo
-  public Map showConsultaGrupo(Integer codGrupo) {
-    List<Map<String, Object>> list = jdbcTemplate
+  public Grupo showConsultaGrupo(Integer codGrupo) {
+    Map<String, Object> grupoMap = jdbcTemplate.queryForMap(
+      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
+        "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
+        "WHERE g.srl_cod_grupo = ?" +
+        "GROUP by g.srl_cod_grupo", codGrupo);
+
+    Grupo grupo = setGrupoFromMap(grupoMap);
+
+    List<Map<String, Object>> rows = jdbcTemplate
       .queryForList("SELECT v.* "+
       "FROM t_visitante v "+
       "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_visitante = v.srl_cod_visitante  "+
       "INNER JOIN t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo "+
       "WHERE "+
       "g.srl_cod_grupo  = ? ", codGrupo);
-      Map grupo = showGrupo( codGrupo);
-      grupo.put("visitantes", list);
+
+    List<Visitante> visitantes = new ArrayList<Visitante>();
+    for (Map row : rows) {
+      visitantes.add( setVisitanteFromMap( row ));
+    }
+
+    grupo.setVisitantes( visitantes );
     return grupo;
   }
 
@@ -683,26 +698,48 @@ public class ListRepository {
   // lista de grupos
   public List<Grupo> showListGrupos() {
     List<Map<String, Object>> rows = jdbcTemplate.queryForList(
-      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g\n" +
-      "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo\n" +
+      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
+      "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
       "GROUP by g.srl_cod_grupo");
     List<Grupo> grupos = new ArrayList<Grupo>();
-
     for (Map row : rows) {
-      Grupo grupo = new Grupo();
-      System.out.print( " >>> LOCAL DATA GRUPO:" +  row.get("dte_fec_programada").toString() );
-      grupo.setCodigo( (String) row.get("var_cod_grupo"));
-      grupo.setCodOperador( (String) row.get("var_cod_operador")  );
-      grupo.setFecha( row.get("dte_fec_programada").toString()  );
-      grupo.setEstado( (Integer) row.get("int_estado")  );
-      grupo.setCosto( (Double)row.get("num_costo")  );
-      grupo.setId( row.get("srl_cod_grupo").toString()  );
-      grupo.setRuta( row.get("srl_cod_ruta").toString() );
-      grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
-      grupo.setInasistencias( (Integer) row.get("int_nro_inasistente"));
-      grupos.add(grupo);
+      grupos.add( setGrupoFromMap( row ));
     }
     return grupos;
+  }
+
+  private Grupo setGrupoFromMap ( Map row){
+    Grupo grupo = new Grupo();
+
+    System.out.print( " >>> LOCAL DATA GRUPO:" +  row.get("dte_fec_programada").toString() );
+    grupo.setCodigo( (String) row.get("var_cod_grupo"));
+    grupo.setCodOperador( (String) row.get("var_cod_operador")  );
+    grupo.setFecha( row.get("dte_fec_programada").toString()  );
+    grupo.setEstado( (Integer) row.get("int_estado")  );
+    grupo.setCosto( (Double)row.get("num_costo")  );
+    grupo.setId( row.get("srl_cod_grupo").toString()  );
+    grupo.setRuta( row.get("srl_cod_ruta").toString() );
+    grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
+    grupo.setInasistencias( (Integer) row.get("int_nro_inasistente"));
+
+    return grupo;
+  }
+
+
+  private Visitante setVisitanteFromMap ( Map row){
+    Visitante visitante = new Visitante();
+
+    System.out.print( " >>> LOCAL DATA VISITANTE:" +  row );
+
+    visitante.setApellidos( (String) row.get("var_apellido") );
+    visitante.setNombres( (String) row.get("var_nombre") );
+    visitante.setDni( (String) row.get("var_nro_documento") );
+    visitante.setTipoDocumento(  row.get("srl_cod_documento").toString() );
+    visitante.setPais(  row.get("srl_cod_pais").toString() );
+    visitante.setSexo( (String) row.get("var_sexo") );
+    visitante.setId((Integer) row.get("srl_cod_visitante") );
+
+    return visitante;
   }
 
   // lista de grupos

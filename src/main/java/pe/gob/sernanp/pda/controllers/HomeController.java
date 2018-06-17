@@ -390,7 +390,7 @@ public class HomeController {
     // Editando grupo
     @RequestMapping(value = "/update_grupo", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> update_grupo(
+    public Grupo update_grupo(
             // required params
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
             @RequestParam Integer codRuta,
@@ -405,7 +405,7 @@ public class HomeController {
     // Tomar Asistencia al grupo
     @RequestMapping(value = "/update_asistencia", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> update_asistencia(
+    public Grupo update_asistencia(
             // required params
             @RequestParam Integer codGrupo,
             @RequestParam Integer codVisitante,
@@ -420,7 +420,7 @@ public class HomeController {
     // Verifica visita del grupo
     @RequestMapping(value = "/update_visitagrupo", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> update_visitagrupo(
+    public Grupo update_visitagrupo(
             // required params
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
             @RequestParam Integer nroVisitantes,
@@ -442,7 +442,7 @@ public class HomeController {
     // Agregar documento al grupo
     @RequestMapping(value = "/update_docgrupo", produces = "application/json")
     @ResponseBody
-    public Map<String, Object> update_docgrupo(
+    public Grupo update_docgrupo(
             // required params
             @RequestParam Integer codGrupo,
             @RequestParam String documento

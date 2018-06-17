@@ -6,10 +6,18 @@ public class Visitante {
   private String tipoDocumento;
   private String dni;
   private String nacimiento;
-  private String genero;
   private String categoria;
   private String pais;
   private String sexo;
+  private Integer id;
+
+  public Integer getId() {
+    return id;
+  }
+
+  public void setId(Integer id) {
+    this.id = id;
+  }
 
   public String getSexo() {
     return sexo;
@@ -68,13 +76,6 @@ public class Visitante {
     this.nacimiento = nacimiento;
   }
 
-  public String getGenero() {
-    return genero;
-  }
-
-  public void setGenero(String genero) {
-    this.genero = genero;
-  }
 
   public String getCategoria() {
     return categoria;

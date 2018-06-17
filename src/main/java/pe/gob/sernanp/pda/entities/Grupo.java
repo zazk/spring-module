@@ -1,5 +1,7 @@
 package pe.gob.sernanp.pda.entities;
 
+import java.util.List;
+
 public class Grupo{
 
   private String id;
@@ -15,7 +17,7 @@ public class Grupo{
   private Integer estado;
   private String documento;
   private String motivoObservado;
-  private Visitante[] visitantes;
+  private List<Visitante> visitantes;
   private Long totalVisitantes;
 
   public String getId() {
@@ -123,11 +125,11 @@ public class Grupo{
     this.totalVisitantes = totalVisitantes;
   }
 
-  public void setVisitantes (Visitante[] visitantes){
+  public void setVisitantes (List<Visitante> visitantes){
       this.visitantes = visitantes;
     }
 
-    public Visitante[] getVisitantes(){
+    public List<Visitante> getVisitantes(){
       return this.visitantes;
     }
 }
