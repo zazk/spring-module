@@ -216,10 +216,20 @@ public class ListRepository {
                                                       Integer nroVisitantes, Double numCosto, String insUsuario) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
-    System.out.println("================= codOPeRADOR ============: "+ codOperador);
+
+    Integer count = jdbcTemplate.queryForObject(
+      "SELECT count(*) " +
+      "FROM t_grupo " +
+      "WHERE var_cod_operador=?",new Object[] { codOperador }, Integer.class);
+    String masked = String.format("%04d", count + 1);
+
+    System.out.println("================= cod OPeRADOR ============: "+ codOperador
+     + " Count Grupos:" +  masked);
+
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO t_grupo(var_cod_operador, srl_cod_ruta, dte_fec_programada, int_nro_visitante, num_costo, int_estado, var_usuario)VALUES (?, ?, ?, ?, ?, ?, ?)",
+        "INSERT INTO t_grupo(var_cod_operador, srl_cod_ruta, dte_fec_programada, int_nro_visitante, num_costo, int_estado, var_usuario, var_cod_grupo) " +
+          "VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
         new String[]{"srl_cod_grupo"});
       ps.setString(1, codOperador);
       ps.setInt(2, codRuta);
@@ -228,6 +238,7 @@ public class ListRepository {
       ps.setDouble(5, numCosto);
       ps.setInt(6, 1);
       ps.setString(7, insUsuario);
+      ps.setString(8, codOperador+"-"+ fecProgramada.getYear()+"-"+ masked );
       return ps;
     }, keyHolder);
 
@@ -709,24 +720,15 @@ public class ListRepository {
       "GROUP by g.srl_cod_grupo");
     List<Grupo> grupos = new ArrayList<Grupo>();
 
-
-
-
-
-
-
-    //DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    //LocalDate fechaNacimiento = LocalDate.parse(v.getNacimiento(), formatter);
-
-
     for (Map row : rows) {
       Grupo grupo = new Grupo();
       System.out.print( " >>> LOCAL DATA GRUPO:" +  row.get("dte_fec_programada").toString() );
+      grupo.setCodigo( (String) row.get("var_cod_grupo"));
       grupo.setCodOperador( (String) row.get("var_cod_operador")  );
       grupo.setFecha( row.get("dte_fec_programada").toString()  );
       grupo.setEstado( (Integer) row.get("int_estado")  );
       grupo.setCosto( (Double)row.get("num_costo")  );
-      grupo.setCodigo( row.get("srl_cod_grupo").toString()  );
+      grupo.setId( row.get("srl_cod_grupo").toString()  );
       grupo.setRuta( row.get("srl_cod_ruta").toString() );
       grupo.setTotalVisitantes( (Long) row.get("total_visitantes") );
       grupos.add(grupo);
