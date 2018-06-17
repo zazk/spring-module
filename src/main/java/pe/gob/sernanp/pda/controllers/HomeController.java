@@ -1,4 +1,4 @@
-package pe.gob.sernanp.pda;
+package pe.gob.sernanp.pda.controllers;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import pe.gob.sernanp.pda.entities.Visitante;
+import pe.gob.sernanp.pda.repository.ListRepository;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
 import org.springframework.http.MediaType;
@@ -25,8 +26,6 @@ import com.google.gson.GsonBuilder;
 public class HomeController {
 
     private final StorageService storageService;
-    @Autowired
-    private BookRepository bookRepository;
 
     @Autowired
     private ListRepository listRepository;
@@ -35,14 +34,6 @@ public class HomeController {
     public HomeController(StorageService storageService) {
         this.storageService = storageService;
     }
-
-    @RequestMapping("/")
-    @ResponseBody
-    public String index() {
-        Book book = bookRepository.findOne(1);
-        return book.getTitle();
-    }
-
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody

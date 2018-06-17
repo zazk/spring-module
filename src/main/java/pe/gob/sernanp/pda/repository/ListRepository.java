@@ -1,4 +1,4 @@
-package pe.gob.sernanp.pda;
+package pe.gob.sernanp.pda.repository;
 
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
@@ -40,7 +40,7 @@ public class ListRepository {
   public List<Map> showList() {
     @SuppressWarnings("unchecked")
     List<Map> list = entityManager.createNativeQuery("select * from t_categoria").getResultList();
-    return list;
+    return list;   
   }
 
   // Example with JDBC - The simplest way.
