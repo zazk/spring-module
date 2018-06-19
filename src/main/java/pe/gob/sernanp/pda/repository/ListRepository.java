@@ -50,7 +50,7 @@ public class ListRepository {
   // Example with JDBC - The simplest way.
   public List<Map<String, Object>> showListJdbc() {
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT id, title, TO_CHAR(fecha, 'yyyy-mm-dd') fecha FROM t_categoria");
+      .queryForList("SELECT * FROM t_categoria");
     return list;
   }
 
@@ -549,8 +549,9 @@ public class ListRepository {
   // Consultando operador
   public List<Map<String, Object>> showConsultaOperador(String codOperador) {
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT o.* FROM t_operador o WHERE var_cod_operador = ?  " +
-        "INNER JOIN t_usuario u ON u.var_email = o.var_email "
+      .queryForList("SELECT o.* FROM t_operador o " +
+        "INNER JOIN t_usuario u ON u.var_email = o.var_email " +
+          "WHERE var_cod_operador = ?  "
         , codOperador);
     return list;
   }
