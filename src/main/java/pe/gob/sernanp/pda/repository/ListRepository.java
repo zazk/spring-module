@@ -581,13 +581,18 @@ public class ListRepository {
   public Grupo showConsultaGrupo(Integer codGrupo) {
     System.out.println("====== showConsultaGrupo( " + codGrupo );
 
-    Map<String, Object> grupoMap = jdbcTemplate.queryForMap(
+    List<Map<String, Object>> grupoMap = jdbcTemplate.queryForList(
       "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
         "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
         "WHERE g.srl_cod_grupo = ?" +
         "GROUP by g.srl_cod_grupo", codGrupo);
 
-    Grupo grupo = setGrupoFromMap(grupoMap);
+    System.out.println("====== showConsultaGrupo( " + grupoMap );
+
+    if( grupoMap.size() == 0 ){
+      return null;
+    }
+    Grupo grupo = setGrupoFromMap(grupoMap.get(0));
     grupo.setVisitantes( showVisitantesGrupo( grupo.getId()) );
     return grupo;
   }
