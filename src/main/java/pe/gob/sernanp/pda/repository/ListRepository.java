@@ -487,9 +487,17 @@ public class ListRepository {
   // Aprobar pago
   public Map<String, Object> updatePagoAprobado(Integer codPago) {
     int status = jdbcTemplate.update("UPDATE t_pago SET int_estado = 2 WHERE srl_cod_pago = ? ", codPago);
-    Map<String, Object> obj = new HashMap<String, Object>();
-    obj.put("id", status);
-    return obj;
+    return updatePago( codPago, true );
+  }
+
+  public Map<String, Object> updatePago( Integer codPago, boolean agregar ){
+    Map<String, Object> pago = showConsultaPago(codPago);
+    System.out.println("PAGO" + pago);
+    Map<String, Object> operador = updateSaldoOperador(
+      pago.get("var_cod_operador").toString(),
+      Integer.parseInt(pago.get("num_monto").toString()),
+      true);
+    return operador;
   }
 
   // Rechazar pago
@@ -497,14 +505,10 @@ public class ListRepository {
     int status = jdbcTemplate.update(
       "UPDATE t_pago SET int_estado = 3, txt_motivorechazo = ? WHERE srl_cod_pago = ? ", motivoRechazo,
       codPago);
-    Map<String, Object> pago = showConsultaPago(codPago);
-    System.out.println("PAGO" + pago);
-    Map<String, Object> operador = updateSaldoOperador(
-      pago.get("var_cod_operador").toString(),
-      Integer.parseInt(pago.get("num_monto").toString()),
-      false);
-    return operador;
+    return updatePago(codPago, false);
   }
+
+
 
   // agregar pago
   public Map<String, Object> updateSaldoOperador(String codOperador, Integer monto, boolean agregar) {
