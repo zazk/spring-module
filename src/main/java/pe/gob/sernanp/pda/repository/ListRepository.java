@@ -514,7 +514,7 @@ public class ListRepository {
   public Map<String, Object> updateSaldoOperador(String codOperador, Integer monto, boolean agregar) {
     Map<String, Object> operador = showConsultaOperador(codOperador).get(0);
     System.out.println(" ========= Here is my Saldo" + operador.get("num_saldo"));
-    Integer saldo = Integer.parseInt(operador.get("num_saldo").toString());
+    Double saldo = Double.parseDouble(operador.get("num_saldo").toString());
     if (agregar) {
       saldo = saldo + monto;
     } else {
