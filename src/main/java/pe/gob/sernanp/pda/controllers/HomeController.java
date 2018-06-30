@@ -6,8 +6,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
 import pe.gob.sernanp.pda.repository.ListRepository;
+import pe.gob.sernanp.pda.repository.RutaRepository;
 import pe.gob.sernanp.pda.repository.UsuarioRepository;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
@@ -35,16 +37,19 @@ public class HomeController {
     private UsuarioRepository usuarioRepository;
 
     @Autowired
+    private RutaRepository rutaRepository;
+
+    @Autowired
     public HomeController(StorageService storageService) {
         this.storageService = storageService;
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> list() {
+    public Iterable<Ruta> list() {
         //Get from Query
-        System.out.println(listRepository.showListJdbc());
-        return listRepository.showListJdbc();
+        System.out.println(rutaRepository.findAll());
+        return rutaRepository.findAll();
     }
 
     // -------------------------------------------
