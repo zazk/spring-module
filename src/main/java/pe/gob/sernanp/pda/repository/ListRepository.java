@@ -32,6 +32,10 @@ public class ListRepository {
 
   @Autowired
   private UsuarioRepository usuarioRepository;
+  @Autowired
+  private TipoDocumentoRepository tipoDocumentoRepository;
+  @Autowired
+  private RutaRepository rutaRepository;
 
   @Autowired(required = true)
   private JdbcTemplate jdbcTemplate;
@@ -543,6 +547,8 @@ public class ListRepository {
         + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
+      map.put("tipoDocumento", tipoDocumentoRepository.findAll()  );
+      map.put("rutas", rutaRepository.findAll()  );
       return map;
     } else {
       map.put("error", "No se ha encontrado usuario");

@@ -10,6 +10,7 @@ import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
 import pe.gob.sernanp.pda.repository.ListRepository;
 import pe.gob.sernanp.pda.repository.RutaRepository;
+import pe.gob.sernanp.pda.repository.TipoDocumentoRepository;
 import pe.gob.sernanp.pda.repository.UsuarioRepository;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
@@ -40,21 +41,23 @@ public class HomeController {
     private RutaRepository rutaRepository;
 
     @Autowired
+    private TipoDocumentoRepository tipoDocumentoRepository;
+
+    @Autowired
     public HomeController(StorageService storageService) {
         this.storageService = storageService;
     }
 
     @RequestMapping(value = "/list", method = RequestMethod.GET, produces = "application/json")
     @ResponseBody
-    public Iterable<Ruta> list() {
+    public Map<String,Object> list() {
         //Get from Query
         System.out.println(rutaRepository.findAll());
-        return rutaRepository.findAll();
+        Map<String,Object> map = new HashMap<>();
+        map.put("rutas", rutaRepository.findAll() );
+        map.put("tiposDocumento", tipoDocumentoRepository.findAll() );
+        return map;
     }
-
-    // -------------------------------------------
-    // Examples
-    // -------------------------------------------
 
     // Weird annotation for date parameteres
     // Example with params http://localhost:8080/list_rutas_params_date?date=2018-05-13
@@ -488,33 +491,6 @@ public class HomeController {
 
 
     // **************************** Listando con parametros *************************
-
-    // Validando usuario
-    @RequestMapping(value = "/login_user", produces = "application/json")
-    @ResponseBody
-    public Map<String, Object> login_user(
-            // required params
-            @RequestParam String user,
-            @RequestParam String pwd
-    ) {
-        //Get from Query with Params
-        System.out.println(listRepository.showLoginUser(user, pwd));
-        return listRepository.showLoginUser(user, pwd);
-    }
-
-
-    // Validando usuario
-    @RequestMapping(value = "/login_sernanp", produces = "application/json")
-    @ResponseBody
-    public Map<String, Object> login_sernanp(
-            // required params
-            @RequestParam String user,
-            @RequestParam String pwd
-    ) {
-        //Get from Query with Params
-        System.out.println(usuarioRepository.showLoginSernanp(user, pwd));
-        return usuarioRepository.showLoginSernanp(user, pwd);
-    }
 
     // Consulta operador
     @RequestMapping(value = "/consulta_operador", produces = "application/json")
