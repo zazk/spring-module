@@ -223,7 +223,7 @@ public class ListRepository {
       ps.setInt(2, codRuta);
       ps.setObject(3, fecProgramada);
       ps.setInt(4, nroVisitantes);
-      ps.setDouble(5, nroVisitantes*numCosto);
+      ps.setDouble(5, numCosto);
       ps.setInt(6, 1);
       ps.setString(7, insUsuario);
       ps.setString(8, codOperador+"-"+ fecProgramada.getYear()+"-"+ masked );
@@ -302,11 +302,15 @@ public class ListRepository {
       System.out.println("ID GRUPO VISITANTE INSERTADO ============================" + codVisitanteGrupo);
     }
 
+    // Actualizar Saldo Operador
+    updateSaldoOperador(g.getCodOperador(),costo,false);
+
     Map inserted = showGrupo(Integer.parseInt(grupo.get("srl_cod_grupo").toString()));
     System.out.println("GRUPO INSERTADO ============================ NO ERROR" + inserted);
 
     Map<String, Object> obj = new HashMap<String, Object>();
     obj.put("grupo", grupo);
+    obj.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
     return obj;
   }
 
@@ -329,7 +333,7 @@ public class ListRepository {
   }
 
   // Insertando pagos
-  public Map<String, Object> insertPago(String codOperador, String nroOperacion, Integer monto, LocalDate fecAbono,
+  public Map<String, Object> insertPago(String codOperador, String nroOperacion, Double monto, LocalDate fecAbono,
                                         String voucher) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -339,7 +343,7 @@ public class ListRepository {
         new String[]{"srl_cod_pago"});
       ps.setString(1, codOperador);
       ps.setString(2, nroOperacion);
-      ps.setInt(3, monto);
+      ps.setDouble(3, monto);
       ps.setObject(4, fecAbono);
       ps.setString(5, voucher);
       ps.setInt(6, 1);
@@ -503,7 +507,7 @@ public class ListRepository {
     System.out.println("PAGO" + pago);
     Map<String, Object> operador = updateSaldoOperador(
       pago.get("var_cod_operador").toString(),
-      Integer.parseInt(pago.get("num_monto").toString()),
+      Double.parseDouble(pago.get("num_monto").toString()),
       true);
     return operador;
   }
@@ -519,7 +523,7 @@ public class ListRepository {
 
 
   // agregar pago
-  public Map<String, Object> updateSaldoOperador(String codOperador, Integer monto, boolean agregar) {
+  public Map<String, Object> updateSaldoOperador(String codOperador, Double monto, boolean agregar) {
     Map<String, Object> operador = showConsultaOperador(codOperador).get(0);
     System.out.println(" ========= Here is my Saldo" + operador.get("num_saldo"));
     Double saldo = Double.parseDouble(operador.get("num_saldo").toString());

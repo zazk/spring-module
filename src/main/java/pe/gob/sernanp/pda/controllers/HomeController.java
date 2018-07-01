@@ -294,7 +294,7 @@ public class HomeController {
             @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fecAbono,
             @RequestParam String codOperador,
             @RequestParam String nroOperacion,
-            @RequestParam Integer monto,
+            @RequestParam Double monto,
             @RequestParam String voucher
     ) {
         System.out.println("insert the pago:" + monto);
