@@ -242,7 +242,7 @@ public class ListRepository {
 
     Double costo = rutaRepository.findOne( Integer.parseInt( g.getRuta() ) ).getCostoVisitante();
 
-    System.out.println("===== COSTO X VISITANTE" +  costo);
+    System.out.println("===== COSTO X VISITANTE: " +  costo + "Total:" + (costo * g.getVisitantes().size()) );
 
     Map<String, Object> grupo = insertGrupo(g.getCodOperador(),
       Integer.parseInt(g.getRuta()), fecha,
