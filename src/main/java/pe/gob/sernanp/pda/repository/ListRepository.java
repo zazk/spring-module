@@ -240,9 +240,13 @@ public class ListRepository {
   // Insertando grupos
   public Map<String, Object> insertGrupoConVisitantes(Grupo g, LocalDate fecha) {
 
+    Double costo = rutaRepository.findOne( Integer.parseInt( g.getRuta() ) ).getCostoVisitante();
+
+    System.out.println("===== COSTO X VISITANTE" +  costo);
+
     Map<String, Object> grupo = insertGrupo(g.getCodOperador(),
       Integer.parseInt(g.getRuta()), fecha,
-      g.getVisitantes().size(), g.getCosto(), g.getCodigo()).get("grupo");
+      g.getVisitantes().size(), (costo * g.getVisitantes().size()) , g.getCodigo()).get("grupo");
 
     System.out.println("GRUPO INSERTADO" + grupo);
 
