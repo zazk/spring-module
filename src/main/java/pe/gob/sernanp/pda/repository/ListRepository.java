@@ -11,6 +11,8 @@ import java.util.Map;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -262,16 +264,14 @@ public class ListRepository {
 
 
   // Insertando grupos
-  public Map<String, Object> updateGrupoConVisitantes(Grupo g, LocalDate fecha) {
+  public Map updateGrupoConVisitantes(Grupo g, LocalDate fecha) {
 
     Double costo = rutaRepository.findOne( Integer.parseInt( g.getRuta() ) ).getCostoVisitante() * g.getVisitantes().size();
 
-    System.out.println("*******===== COSTO X VISITANTE: " +  costo  );
+    System.out.println("Method: updateGrupoConVisitantes() *******===== COSTO X VISITANTE: " +  costo  );
 
     Grupo oldGrupo = showConsultaGrupo( g.getId() );
 
-
-    System.out.println( "GRUPO ACTUALIZAR ============================" + g.getId() );
     removeVisitantes( oldGrupo );
     addVisitantes( g );
     // Actualizar Saldo Operador
@@ -279,10 +279,11 @@ public class ListRepository {
       updateSaldoOperador(g.getCodOperador(), costo - oldGrupo.getCosto() , true);
     }
 
-    Map<String, Object> obj = new HashMap<String, Object>();
-    obj.put("grupo", g);
-    obj.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
-    return obj;
+    updateGrupo( parseFecha( g.getFecha()), Integer.parseInt( g.getRuta() ), g.getId() );
+
+    Map map = send("grupo", g);
+    map.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
+    return map;
   }
 
   public void addVisitantes( Grupo grupo ){
@@ -632,7 +633,7 @@ public class ListRepository {
 
     List<Map<String, Object>> grupoMap = jdbcTemplate.queryForList(
       "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
-        "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
+        "LEFT JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
         "WHERE g.srl_cod_grupo = ?" +
         "GROUP by g.srl_cod_grupo", codGrupo);
 
@@ -862,5 +863,23 @@ public class ListRepository {
 
   public void updateRow(String name, int id) {
     jdbcTemplate.update("update books set title = ? where id = ?", name, id);
+  }
+
+
+  public Grupo parseGrupo( String grupo){
+    Gson gson = new GsonBuilder().create();
+    Grupo g = gson.fromJson(grupo, Grupo.class);
+    return g;
+  }
+
+  public LocalDate parseFecha( String fecha ){
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    return LocalDate.parse(fecha, formatter);
+  }
+
+  public Map send( String key,  Object obj ){
+    Map<String, Object> map = new HashMap<String, Object>();
+    map.put(key,  obj);
+    return map;
   }
 }
