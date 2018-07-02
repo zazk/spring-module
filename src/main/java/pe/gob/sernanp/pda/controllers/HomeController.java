@@ -260,6 +260,9 @@ public class HomeController {
 
       System.out.println("insert the id:" + grupo);
       Grupo g = parseGrupo(grupo);
+      if( g.getId() == null ){
+        return send("error", "Se debe proveer de ID de Grupo");
+      }
       Map obj = listRepository.updateGrupoConVisitantes(g, parseFecha(g.getFecha()));
       return send("grupo", obj);
 
