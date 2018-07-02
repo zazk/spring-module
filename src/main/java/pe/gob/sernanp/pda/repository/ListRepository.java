@@ -231,7 +231,7 @@ public class ListRepository {
     }, keyHolder);
 
     Grupo g = showConsultaGrupo( keyHolder.getKey().intValue() );
-    System.out.println("········· Habrá conseguido········" + g );
+    System.out.println("Key "+ keyHolder.getKey() +  "········· Habrá conseguido········" + g );
     return g;
   }
 
