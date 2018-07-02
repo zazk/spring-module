@@ -279,9 +279,9 @@ public class ListRepository {
       updateSaldoOperador(g.getCodOperador(), costo - oldGrupo.getCosto() , true);
     }
 
-    updateGrupo( parseFecha( g.getFecha()), Integer.parseInt( g.getRuta() ), g.getId() );
+    updateGrupo( parseFecha( g.getFecha()), Integer.parseInt( g.getRuta() ), g.getId() , costo );
 
-    Map map = send("grupo", g);
+    Map map = send("grupo", showConsultaGrupo( g.getId() ));
     map.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
     return map;
   }
@@ -450,9 +450,12 @@ public class ListRepository {
   }
 
   // Editando Grupo
-  public Map<String, Object> updateGrupo(LocalDate date, Integer codRuta, Integer id) {
+  public Map<String, Object> updateGrupo(LocalDate date, Integer codRuta, Integer id, Double costo) {
     int status = jdbcTemplate.update(
-      "UPDATE t_grupo SET dte_fec_programada = ?, srl_cod_ruta = ?  WHERE srl_cod_grupo = ? ", date, codRuta,
+      "UPDATE t_grupo SET dte_fec_programada = ?, srl_cod_ruta = ?, num_costo = ?  WHERE srl_cod_grupo = ? ",
+      date,
+      codRuta,
+      costo,
       id);
     Map<String, Object> obj = new HashMap<String, Object>();
     obj.put("id", status);
@@ -632,7 +635,7 @@ public class ListRepository {
     System.out.println("====== showConsultaGrupo( " + codGrupo );
 
     List<Map<String, Object>> grupoMap = jdbcTemplate.queryForList(
-      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
+      "SELECT g.*, count(gv.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
         "LEFT JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
         "WHERE g.srl_cod_grupo = ?" +
         "GROUP by g.srl_cod_grupo", codGrupo);
