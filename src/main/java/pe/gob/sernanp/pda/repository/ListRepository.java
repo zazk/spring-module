@@ -200,7 +200,7 @@ public class ListRepository {
   }
 
   // Insertando grupos
-  public Map<String, Map<String, Object>> insertGrupo(String codOperador, Integer codRuta, LocalDate fecProgramada,
+  public Grupo insertGrupo(String codOperador, Integer codRuta, LocalDate fecProgramada,
                                                       Integer nroVisitantes, Double numCosto, String insUsuario) {
     KeyHolder keyHolder = new GeneratedKeyHolder();
 
@@ -230,11 +230,8 @@ public class ListRepository {
       return ps;
     }, keyHolder);
 
-    Map grupo = showGrupo(Integer.parseInt(keyHolder.getKey().toString()));
-
-    return new HashMap<String, Map<String, Object>>() {{
-      put("grupo", grupo);
-    }};
+    Grupo g = showConsultaGrupo( keyHolder.getKey().intValue() );
+    return g;
   }
 
   // Insertando grupos
@@ -244,19 +241,55 @@ public class ListRepository {
 
     System.out.println("*******===== COSTO X VISITANTE: " +  costo  );
 
-    Map<String, Object> grupo = insertGrupo(g.getCodOperador(),
+    Grupo grupo = insertGrupo(g.getCodOperador(),
       Integer.parseInt(g.getRuta()), fecha,
-      g.getVisitantes().size(), costo , g.getCodigo()).get("grupo");
+      g.getVisitantes().size(), costo , g.getCodigo());
 
     System.out.println("GRUPO INSERTADO" + grupo);
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-    System.out.println("Formato Fecha ============================" + g.getVisitantes());
-    System.out.println("GRUPO ID INSERTADO ============================" + grupo.get("srl_cod_grupo"));
+    addVisitantes(grupo);
 
-    for (int i = 0; i < g.getVisitantes().size(); i++) {
-      // TODO
-      Visitante v = g.getVisitantes().get(i);
+    // Actualizar Saldo Operador
+    updateSaldoOperador(g.getCodOperador(),costo,false);
+
+    Map<String, Object> obj = new HashMap<String, Object>();
+    obj.put("grupo", grupo);
+    obj.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
+    return obj;
+  }
+
+
+
+  // Insertando grupos
+  public Map<String, Object> updateGrupoConVisitantes(Grupo g, LocalDate fecha) {
+
+    Double costo = rutaRepository.findOne( Integer.parseInt( g.getRuta() ) ).getCostoVisitante() * g.getVisitantes().size();
+
+    System.out.println("*******===== COSTO X VISITANTE: " +  costo  );
+
+    Grupo oldGrupo = showConsultaGrupo( g.getId() );
+
+
+    System.out.println( "GRUPO ACTUALIZAR ============================" + g.getId() );
+    removeVisitantes( oldGrupo );
+    addVisitantes( g );
+    // Actualizar Saldo Operador
+    if ( g.getVisitantes().size() != oldGrupo.getVisitantes().size()) {
+      updateSaldoOperador(g.getCodOperador(), costo - oldGrupo.getCosto() , true);
+    }
+
+    Map<String, Object> obj = new HashMap<String, Object>();
+    obj.put("grupo", g);
+    obj.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
+    return obj;
+  }
+
+  public void addVisitantes( Grupo grupo ){
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+
+    for (int i = 0; i < grupo.getVisitantes().size(); i++) {
+      Visitante v = grupo.getVisitantes().get(i);
       LocalDate fechaNacimiento = LocalDate.parse(v.getNacimiento(), formatter);
       // Insert Visitante
       ObjectMapper oMapper = new ObjectMapper();
@@ -273,12 +306,8 @@ public class ListRepository {
         + " SEXO "
         + v.getSexo()
       );
-      if ( !v.getSexo().equals("M") && !v.getSexo().equals("F")){
-        System.out.println(" >> El sexo debe ser M o F según sea correspondiente.");
-        String msg = "Visitante: El sexo debe ser M o F según sea correspondiente. Usuario Index:" + i;
-        return new HashMap<String, Object>() {{
-          put("error", msg );
-        }};
+      if ( !v.getSexo().equals("M") ){
+        v.setSexo("F");
       }
 
       String codVisitante = insertVisitante(
@@ -295,24 +324,23 @@ public class ListRepository {
       System.out.println("ID VISITANTE INSERTADO ============================" + codVisitante);
 
       String codVisitanteGrupo = insertVisitanteGrupo(
-        Integer.parseInt( grupo.get("srl_cod_grupo").toString()),
+        grupo.getId(),
         Integer.parseInt(codVisitante)
       ).get("srl_cod_grupo");
 
-      System.out.println("ID GRUPO VISITANTE INSERTADO ============================" + codVisitanteGrupo);
+      System.out.println("ID GRUPO VISITANTE INSERTADO ============================" + codVisitante);
     }
-
-    // Actualizar Saldo Operador
-    updateSaldoOperador(g.getCodOperador(),costo,false);
-
-    Map inserted = showGrupo(Integer.parseInt(grupo.get("srl_cod_grupo").toString()));
-    System.out.println("GRUPO INSERTADO ============================ NO ERROR" + inserted);
-
-    Map<String, Object> obj = new HashMap<String, Object>();
-    obj.put("grupo", grupo);
-    obj.put("operador", showConsultaOperador(g.getCodOperador()).get(0));
-    return obj;
   }
+
+
+  public void removeVisitantes( Grupo grupo ){
+    for (int i = 0; i < grupo.getVisitantes().size(); i++) {
+      Visitante v = grupo.getVisitantes().get(i);
+      Map m = deleteVisitanteGrupo( grupo.getId(), v.getId());
+      System.out.println("ID GRUPO VISITANTE INSERTADO ============================" + m);
+    }
+  }
+
 
   // Insertando visitantes al grupo
   public Map<String, String> insertVisitanteGrupo(Integer codGrupo, Integer codVisitante) {
@@ -376,6 +404,8 @@ public class ListRepository {
     int status = jdbcTemplate.update(
       "DELETE FROM t_grupo_visitante WHERE srl_cod_grupo = ? AND srl_cod_visitante = ? ", codGrupo,
       codVisitante);
+    int id = jdbcTemplate.update(
+      "DELETE FROM t_visitante WHERE srl_cod_visitante = ? ", codVisitante);
     Map<String, Object> obj = new HashMap<String, Object>();
     obj.put("id", status);
     return obj;

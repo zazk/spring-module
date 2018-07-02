@@ -245,21 +245,24 @@ public class HomeController {
             @RequestParam String grupo
     ) {
 
-        System.out.println("insert the id:" + grupo);
+        Grupo g = parseGrupo(grupo);
+        Map obj = listRepository.insertGrupoConVisitantes( g, parseFecha(g.getFecha()) );
+        return send("grupo", obj);
+    }
 
-        Gson gson = new GsonBuilder().create();
-        Grupo g = gson.fromJson(grupo, Grupo.class);
+    //Update grupo
+    @RequestMapping(value = "/update_grupo", produces = "application/json")
+    @ResponseBody
+    public Map<String, Object> update_grupo(
+      // required params
+      @RequestParam String grupo
+    ) {
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-        LocalDate fecha = LocalDate.parse(g.getFecha(), formatter);
+      System.out.println("insert the id:" + grupo);
+      Grupo g = parseGrupo(grupo);
+      Map obj = listRepository.updateGrupoConVisitantes(g, parseFecha(g.getFecha()));
+      return send("grupo", obj);
 
-        System.out.println("GRUPO POST" + g);
-
-        Map obj = listRepository.insertGrupoConVisitantes(g, fecha);
-
-        Map<String, Object> map = new HashMap<String, Object>();
-        map.put("grupo",  obj);
-        return map;
     }
 
     //Insertando visitantes al grupos
@@ -392,21 +395,6 @@ public class HomeController {
         System.out.println(listRepository.updateVisitante(codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, date, sexo, id));
         System.out.println("Update the id:" + id);
         return listRepository.showListVisitantes();
-    }
-
-    // Editando grupo
-    @RequestMapping(value = "/update_grupo", produces = "application/json")
-    @ResponseBody
-    public Grupo update_grupo(
-            // required params
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate date,
-            @RequestParam Integer codRuta,
-            @RequestParam Integer codGrupo
-    ) {
-        //Get from Query with Params
-        System.out.println(listRepository.updateGrupo(date, codRuta, codGrupo));
-        System.out.println("Update the id:" + codGrupo);
-        return listRepository.showConsultaGrupo(codGrupo);
     }
 
     // Tomar Asistencia al grupo
@@ -774,6 +762,23 @@ public class HomeController {
       }else{
         map.put("error", "Tipo de Archivo no aceptado");
       }
+      return map;
+    }
+
+    public Grupo parseGrupo( String grupo){
+      Gson gson = new GsonBuilder().create();
+      Grupo g = gson.fromJson(grupo, Grupo.class);
+      return g;
+    }
+
+    public LocalDate parseFecha( String fecha ){
+      DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+      return LocalDate.parse(fecha, formatter);
+    }
+
+    public Map send( String key,  Object obj ){
+      Map<String, Object> map = new HashMap<String, Object>();
+      map.put(key,  obj);
       return map;
     }
 
