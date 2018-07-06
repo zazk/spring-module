@@ -464,8 +464,9 @@ public class ListRepository {
 
   // Tomando asistencia al grupo
   public Grupo updateAsistenciaGrupo( Grupo grupo) {
+
     int inasistentes = 0;
-    System.out.println("====== Grupo:"+ grupo + " Visitantes: " + grupo.getVisitantes().size() );
+    System.out.println("======  updateAsistenciaGrupo == Grupo:"+ grupo + "Documento" + grupo.getDocumento() +" Visitantes: " + grupo.getVisitantes().size() );
     for (Visitante row : grupo.getVisitantes()) {
 
       System.out.println("====== Visitante:"+ row+ " Index: "+row.getAsistio() );
@@ -474,7 +475,7 @@ public class ListRepository {
         inasistentes++;
       }
     }
-    verificarVisitaGrupo( inasistentes, 2, null, null,grupo.getId());
+    verificarVisitaGrupo( inasistentes, 2, grupo.getDocumento(), null,grupo.getId());
 
     return showConsultaGrupo( grupo.getId() );
   }
@@ -814,6 +815,7 @@ public class ListRepository {
     System.out.print( " >>> LOCAL DATA GRUPO:" +  row.get("dte_fec_programada").toString() );
     grupo.setCodigo( (String) row.get("var_cod_grupo"));
     grupo.setCodOperador( (String) row.get("var_cod_operador")  );
+    grupo.setDocumento( (String) row.get("var_documento")  );
     grupo.setFecha( row.get("dte_fec_programada").toString()  );
     grupo.setEstado( (Integer) row.get("int_estado")  );
     grupo.setCosto( (Double)row.get("num_costo")  );
