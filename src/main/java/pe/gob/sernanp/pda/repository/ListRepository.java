@@ -23,6 +23,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 import pe.gob.sernanp.pda.entities.Grupo;
+import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
 
 @Repository
@@ -474,6 +475,10 @@ public class ListRepository {
       if ( !row.getAsistio() ){
         inasistentes++;
       }
+    }
+    if ( inasistentes > 0){
+      Ruta ruta = rutaRepository.findOne( Integer.parseInt( grupo.getRuta() ) );
+      updateSaldoOperador(grupo.getCodOperador(), inasistentes * ruta.getCostoVisitante() , true);
     }
     verificarVisitaGrupo( inasistentes, 2, grupo.getDocumento(), null,grupo.getId());
 
