@@ -248,9 +248,9 @@ public class ListRepository {
       Integer.parseInt(g.getRuta()), fecha,
       g.getVisitantes().size(), costo , g.getCodigo());
 
-    System.out.println("GRUPO INSERTADO" + grupo);
-
-    addVisitantes(grupo);
+    System.out.println("GRUPO INSERTADO" + grupo + " GRUPO ID:" + grupo.getId() );
+    g.setId(grupo.getId());
+    addVisitantes(g);
 
     // Actualizar Saldo Operador
     updateSaldoOperador(g.getCodOperador(),costo,false);
