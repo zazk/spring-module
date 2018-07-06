@@ -379,7 +379,7 @@ public class ListRepository {
       ps.setInt(6, 1);
       return ps;
     }, keyHolder);
-    updateSaldoOperador(codOperador, monto, true);
+    // updateSaldoOperador(codOperador, monto, true);
     Map<String, Object> obj = new HashMap<String, Object>();
     obj.put("srl_cod_pago", keyHolder.getKey());
     obj.put("pago", showConsultaPago(keyHolder.getKey().intValue()));
