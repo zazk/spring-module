@@ -8,10 +8,7 @@ import java.util.Map;
 
 import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
-import pe.gob.sernanp.pda.repository.ListRepository;
-import pe.gob.sernanp.pda.repository.RutaRepository;
-import pe.gob.sernanp.pda.repository.TipoDocumentoRepository;
-import pe.gob.sernanp.pda.repository.UsuarioRepository;
+import pe.gob.sernanp.pda.repository.*;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
 import org.springframework.http.MediaType;
@@ -39,6 +36,9 @@ public class HomeController {
 
     @Autowired
     private RutaRepository rutaRepository;
+
+    @Autowired
+    private OperadorRepository operadorRepository;
 
     @Autowired
     private TipoDocumentoRepository tipoDocumentoRepository;
@@ -499,13 +499,13 @@ public class HomeController {
     // Consulta operador x email
     @RequestMapping(value = "/consulta_operadorxemail", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> consulta_operadorxemail(
+    public Map<String, Object> consulta_operadorxemail(
             // required params
             @RequestParam String email
     ) {
         //Get from Query with Params
         System.out.println(listRepository.showConsultaOperadorxemail(email));
-        return listRepository.showConsultaOperadorxemail(email);
+        return listRepository.showConsultaOperadorxemail(email).get(0);
     }
 
 
