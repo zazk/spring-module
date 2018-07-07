@@ -688,7 +688,7 @@ public class ListRepository {
     List<Map<String, Object>> list = jdbcTemplate.queryForList(
       "SELECT * FROM t_grupo "
 
-      +" WHERE var_cod_operador = ?",
+      +" WHERE var_cod_operador = ? ORDER BY dte_fec_programada DESC ",
       codOperador);
     return list;
   }
@@ -811,6 +811,20 @@ public class ListRepository {
     return grupos;
   }
 
+  // lista de grupos
+  public List<Grupo> showListGruposHoy() {
+    List<Map<String, Object>> rows = jdbcTemplate.queryForList(
+      "SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g " +
+        "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " +
+        "WHERE g.dte_fec_programada = CURRENT_DATE " +
+        "GROUP by g.srl_cod_grupo");
+    List<Grupo> grupos = new ArrayList<Grupo>();
+    for (Map row : rows) {
+      grupos.add( setGrupoFromMap( row ));
+    }
+    return grupos;
+  }
+
   private Grupo setGrupoFromMap ( Map row){
     Grupo grupo = new Grupo();
 
@@ -819,6 +833,8 @@ public class ListRepository {
     grupo.setCodOperador( (String) row.get("var_cod_operador")  );
     grupo.setDocumento( (String) row.get("var_documento")  );
     grupo.setFecha( row.get("dte_fec_programada").toString()  );
+    grupo.setFechaModificacion( row.get("dte_fec_modificacion") == null? null : row.get("dte_fec_modificacion").toString()  );
+    grupo.setFechaCreacion( row.get("dte_fec_creacion").toString()  );
     grupo.setEstado( (Integer) row.get("int_estado")  );
     grupo.setCosto( (Double)row.get("num_costo")  );
     grupo.setId( (Integer) row.get("srl_cod_grupo")  );

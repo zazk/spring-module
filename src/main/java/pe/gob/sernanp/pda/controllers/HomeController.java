@@ -702,6 +702,16 @@ public class HomeController {
         return listRepository.showListGrupos();
     }
 
+
+    // Lista de grupos hoy
+    @RequestMapping(value = "/list_grupos_hoy", produces = "application/json")
+    @ResponseBody
+    public List<Grupo> list_grupos_hoy() {
+      //Get from Query
+      System.out.println(listRepository.showListGruposHoy());
+      return listRepository.showListGruposHoy();
+    }
+
     // *************************** Fin listando ********************************
 
 

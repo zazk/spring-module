@@ -12,6 +12,8 @@ public class Grupo{
   private String saldo;
   private String fecha;
   private String fechaObservacion;
+  private String fechaModificacion;
+  private String fechaCreacion;
   private Integer inasistencias;
   private Double costo;
   private Integer estado;
@@ -132,4 +134,20 @@ public class Grupo{
     public List<Visitante> getVisitantes(){
       return this.visitantes;
     }
+
+  public String getFechaModificacion() {
+    return fechaModificacion;
+  }
+
+  public void setFechaModificacion(String fechaModificacion) {
+    this.fechaModificacion = fechaModificacion;
+  }
+
+  public String getFechaCreacion() {
+    return fechaCreacion;
+  }
+
+  public void setFechaCreacion(String fechaCreacion) {
+    this.fechaCreacion = fechaCreacion;
+  }
 }
