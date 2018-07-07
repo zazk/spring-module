@@ -295,24 +295,14 @@ public class ListRepository {
       ObjectMapper oMapper = new ObjectMapper();
 
       Map<String, Object> map = oMapper.convertValue(v, Map.class);
-      System.out.println(" Visitante Map ============================"
-        + v.getTipoDocumento()
-        + "TIPO DOCUMENTO PARSED"
-        + Integer.parseInt(v.getTipoDocumento())
-        + " CATEGORIA "
-        + v.getCategoria()
-        + " PAIS "
-        + v.getPais()
-        + " SEXO "
-        + v.getSexo()
-      );
+      System.out.println(" Visitante Map ==============" + v.toString() );
       if ( !v.getSexo().equals("M") ){
         v.setSexo("F");
       }
 
       String codVisitante = insertVisitante(
         Integer.parseInt(v.getTipoDocumento()),
-        Integer.parseInt(v.getCategoria()),
+        v.getCategoria(),
         Integer.parseInt(v.getPais()),
         v.getNombres(),
         v.getApellidos(),
@@ -585,23 +575,6 @@ public class ListRepository {
   // ************************ Listando con parametros
   // ***********************************
 
-  // Validando usuario
-  public Map<String, Object> showLoginUser(String user, String pwd) {
-    Map<String, Object> map = new HashMap<String, Object>();
-    List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
-        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
-    if (list.size() > 0) {
-      map.put("user", list.get(0));
-      map.put("tipoDocumento", tipoDocumentoRepository.findAll()  );
-      map.put("rutas", rutaRepository.findAll()  );
-      return map;
-    } else {
-      map.put("error", "No se ha encontrado usuario");
-      return map;
-    }
-  }
-
   // Consultando operador
   public List<Map<String, Object>> showConsultaOperador(String codOperador) {
     List<Map<String, Object>> list = jdbcTemplate
@@ -627,10 +600,11 @@ public class ListRepository {
   }
 
   // Consultando visitante
-  public List<Map<String, Object>> showConsultaVisitante(Integer codVisitante) {
+  public Visitante showConsultaVisitante(Integer codVisitante) {
     List<Map<String, Object>> list = jdbcTemplate
       .queryForList("SELECT * FROM t_visitante WHERE srl_cod_visitante = ? ", codVisitante);
-    return list;
+
+    return setVisitanteFromMap(list.get(0));
   }
 
   // Consultando Grupo
@@ -749,12 +723,6 @@ public class ListRepository {
   // ************************************ Listando
   // ***********************************
 
-  // lista los usuarios
-  public List<Map<String, Object>> showListUsuarios() {
-    List<Map<String, Object>> list_usuarios = jdbcTemplate.queryForList("SELECT * FROM t_usuario");
-    return list_usuarios;
-  }
-
   // lista los visitantes
   public List<Map<String, Object>> showListVisitantes() {
     List<Map<String, Object>> list_visitantes = jdbcTemplate.queryForList("SELECT * FROM t_visitante");
@@ -860,7 +828,7 @@ public class ListRepository {
     visitante.setId((Integer) row.get("srl_cod_visitante") );
     visitante.setAsistio((Boolean) row.get("bol_ingreso") );
     visitante.setNacimiento( row.get("dte_fec_nacimiento").toString());
-    visitante.setCategoria( row.get("srl_cod_categoria").toString() );
+    visitante.setCategoria( (Integer)row.get("srl_cod_categoria") );
 
     return visitante;
   }

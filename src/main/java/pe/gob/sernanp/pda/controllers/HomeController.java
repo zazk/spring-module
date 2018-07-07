@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
 import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
 import pe.gob.sernanp.pda.repository.*;
@@ -39,6 +40,9 @@ public class HomeController {
 
     @Autowired
     private OperadorRepository operadorRepository;
+
+    @Autowired
+    private VisitanteRepository visitanteRepository;
 
     @Autowired
     private TipoDocumentoRepository tipoDocumentoRepository;
@@ -154,7 +158,7 @@ public class HomeController {
     //Insertando noticias
     @RequestMapping(value = "/insert_operador", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> insert_news(
+    public List<Map<String, Object>> insert_operador(
             // required params
             @RequestParam String codigo,
             @RequestParam String ruc,
@@ -199,7 +203,7 @@ public class HomeController {
           return obj;
         }
       obj = usuarioRepository.insertUsuario(email,clave,email, rol);
-      List<Map<String,Object>> l = listRepository.showListUsuarios();
+      List<Map<String,Object>> l = usuarioRepository.showListUsuarios();
       return l.get( l.size() - 1 );
     }
 
@@ -222,19 +226,17 @@ public class HomeController {
     //Insertando visitantes
     @RequestMapping(value = "/insert_visitante", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> insert_visitante(
+    public Visitante insert_visitante(
             // required params
-            @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) @RequestParam LocalDate fNac,
-            @RequestParam Integer codDocumento,
-            @RequestParam Integer codCategoria,
-            @RequestParam Integer codPais,
-            @RequestParam String nombre,
-            @RequestParam String apellido,
-            @RequestParam String nroDocumento,
-            @RequestParam String sexo
+            @RequestParam String visitante
     ) {
-        System.out.println("insert the id:" + listRepository.insertVisitante(codDocumento, codCategoria, codPais, nombre, apellido, nroDocumento, fNac, sexo) );
-        return listRepository.showListVisitantes();
+      System.out.println("===================================" );
+      System.out.println("insert the visitante:" + parseVisitante( visitante ));
+      System.out.println("==================================="  );
+      Visitante v = visitanteRepository.save( parseVisitante( visitante ));
+        System.out.println("insert the visitante:" + v.toString());
+
+        return v;
     }
 
     //Insertando grupos
@@ -512,13 +514,12 @@ public class HomeController {
     // Consulta visitante
     @RequestMapping(value = "/consulta_visitante", produces = "application/json")
     @ResponseBody
-    public List<Map<String, Object>> consulta_visitante(
+    public Visitante consulta_visitante(
             // required params
             @RequestParam Integer codVisitante
     ) {
         //Get from Query with Params
-        System.out.println(listRepository.showConsultaVisitante(codVisitante));
-        return listRepository.showConsultaVisitante(codVisitante);
+        return visitanteRepository.findOne(codVisitante);
     }
 
 
@@ -783,7 +784,11 @@ public class HomeController {
       Grupo g = gson.fromJson(grupo, Grupo.class);
       return g;
     }
-
+    public Visitante parseVisitante( String visitante){
+      Gson gson = new GsonBuilder().create();
+      Visitante v = gson.fromJson(visitante, Visitante.class);
+      return v;
+    }
     public LocalDate parseFecha( String fecha ){
       System.out.println("parseFecha:" +  fecha);
       DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");

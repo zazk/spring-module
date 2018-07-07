@@ -28,8 +28,8 @@ public class UserController {
     @RequestParam String pwd
   ) {
     //Get from Query with Params
-    System.out.println(listRepository.showLoginUser(user, pwd));
-    return listRepository.showLoginUser(user, pwd);
+    System.out.println(usuarioRepository.showLoginUser(user, pwd));
+    return usuarioRepository.showLoginUser(user, pwd);
   }
 
 

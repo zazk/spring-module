@@ -1,15 +1,42 @@
 package pe.gob.sernanp.pda.entities;
 
+import javax.persistence.*;
+
+@NamedQueries({
+})
+@Entity
+@Table(name="t_visitante")
 public class Visitante {
-  private String nombres;
-  private String apellidos;
-  private String tipoDocumento;
-  private String dni;
-  private String nacimiento;
-  private String categoria;
-  private String pais;
-  private String sexo;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  @Column(name = "srl_cod_visitante")
   private Integer id;
+
+  @Column(name = "var_nombre")
+  private String nombres;
+
+  @Column(name = "var_apellido")
+  private String apellidos;
+
+  @Column(name = "srl_cod_documento")
+  private String tipoDocumento;
+
+  @Column(name = "var_nro_documento")
+  private String dni;
+
+  @Column(name = "dte_fec_nacimiento")
+  private String nacimiento;
+
+  @Column(name = "srl_cod_categoria")
+  private Integer categoria;
+
+  @Column(name = "srl_cod_pais")
+  private String pais;
+
+  @Column(name = "var_sexo")
+  private String sexo;
+
+  @Transient
   private Boolean asistio;
 
   public Boolean getAsistio() {
@@ -86,11 +113,27 @@ public class Visitante {
   }
 
 
-  public String getCategoria() {
+  public Integer getCategoria() {
     return categoria;
   }
 
-  public void setCategoria(String categoria) {
+  public void setCategoria(Integer categoria) {
     this.categoria = categoria;
+  }
+
+  @Override
+  public String toString() {
+    return "Visitante{" +
+      "nombres='" + nombres + '\'' +
+      ", apellidos='" + apellidos + '\'' +
+      ", tipoDocumento='" + tipoDocumento + '\'' +
+      ", dni='" + dni + '\'' +
+      ", nacimiento='" + nacimiento + '\'' +
+      ", categoria='" + categoria + '\'' +
+      ", pais='" + pais + '\'' +
+      ", sexo='" + sexo + '\'' +
+      ", id=" + id +
+      ", asistio=" + asistio +
+      '}';
   }
 }

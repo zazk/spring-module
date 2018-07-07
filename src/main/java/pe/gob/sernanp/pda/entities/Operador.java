@@ -20,6 +20,8 @@ public class Operador {
   private String razonsocial;
   @Column(name = "var_direccion")
   private String direccion;
+  @Column(name = "var_telefono")
+  private String telefono;
   @Column(name = "var_ruc")
   private String ruc;
   @Column(name = "var_email")
@@ -67,6 +69,14 @@ public class Operador {
     this.direccion = direccion;
   }
 
+  public String getTelefono() {
+    return telefono;
+  }
+
+  public void setTelefono(String telefono) {
+    this.telefono = telefono;
+  }
+
   public String getRuc() {
     return ruc;
   }
@@ -89,6 +99,21 @@ public class Operador {
 
   public void setWeb(String web) {
     this.web = web;
+  }
+
+  @Override
+  public String toString() {
+    return "Operador{" +
+      "codigo='" + codigo + '\'' +
+      ", estado=" + estado +
+      ", saldo=" + saldo +
+      ", razonsocial='" + razonsocial + '\'' +
+      ", direccion='" + direccion + '\'' +
+      ", telefono='" + telefono + '\'' +
+      ", ruc='" + ruc + '\'' +
+      ", email='" + email + '\'' +
+      ", web='" + web + '\'' +
+      '}';
   }
 }
 

@@ -16,6 +16,10 @@ public class UsuarioRepository {
 
   @Autowired(required = true)
   private JdbcTemplate jdbcTemplate;
+  @Autowired
+  private TipoDocumentoRepository tipoDocumentoRepository;
+  @Autowired
+  private RutaRepository rutaRepository;
 
   // Insertando Usuario
   public Map<String, Object> insertUsuario(String usuario, String clave, String email, String rol) {
@@ -53,5 +57,30 @@ public class UsuarioRepository {
       return map;
     }
   }
+
+
+  // Validando usuario
+  public Map<String, Object> showLoginUser(String user, String pwd) {
+    Map<String, Object> map = new HashMap<String, Object>();
+    List<Map<String, Object>> list = jdbcTemplate
+      .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
+        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+    if (list.size() > 0) {
+      map.put("user", list.get(0));
+      map.put("tipoDocumento", tipoDocumentoRepository.findAll()  );
+      map.put("rutas", rutaRepository.findAll()  );
+      return map;
+    } else {
+      map.put("error", "No se ha encontrado usuario");
+      return map;
+    }
+  }
+
+  // lista los usuarios
+  public List<Map<String, Object>> showListUsuarios() {
+    List<Map<String, Object>> list_usuarios = jdbcTemplate.queryForList("SELECT * FROM t_usuario");
+    return list_usuarios;
+  }
+
 
 }
