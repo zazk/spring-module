@@ -3,10 +3,7 @@ package pe.gob.sernanp.pda.repository;
 import java.sql.PreparedStatement;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
@@ -846,6 +843,8 @@ public class ListRepository {
     visitante.setSexo( (String) row.get("var_sexo") );
     visitante.setId((Integer) row.get("srl_cod_visitante") );
     visitante.setAsistio((Boolean) row.get("bol_ingreso") );
+    visitante.setNacimiento( row.get("dte_fec_nacimiento").toString());
+    visitante.setCategoria( row.get("srl_cod_categoria").toString() );
 
     return visitante;
   }
@@ -883,6 +882,7 @@ public class ListRepository {
   }
 
   public LocalDate parseFecha( String fecha ){
+    System.out.println("parseFecha:" +  fecha);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
     return LocalDate.parse(fecha, formatter);
   }
