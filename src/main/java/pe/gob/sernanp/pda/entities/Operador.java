@@ -9,8 +9,7 @@ import javax.persistence.*;
 public class Operador {
 
   @Id
-  @GeneratedValue
-  @Column(name = "srl_cod_operador")
+  @Column(name = "var_cod_operador")
   private String codigo;
   @Column(name = "bol_estado")
   private boolean estado;

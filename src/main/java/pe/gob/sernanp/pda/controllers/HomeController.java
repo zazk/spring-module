@@ -155,36 +155,6 @@ public class HomeController {
 
     // ************************ Insertando registros ******************************************
 
-    //Insertando noticias
-    @RequestMapping(value = "/insert_operador", produces = "application/json")
-    @ResponseBody
-    public List<Map<String, Object>> insert_operador(
-            // required params
-            @RequestParam String codigo,
-            @RequestParam String ruc,
-            @RequestParam String razonsocial,
-            @RequestParam String direccion,
-            @RequestParam String telefono,
-            @RequestParam String email,
-            @RequestParam String web,
-            @RequestParam int saldo,
-            @RequestParam boolean estado
-    ) {
-        listRepository.insertOperador(
-                codigo,
-                ruc,
-                razonsocial,
-                direccion,
-                telefono,
-                email,
-                web,
-                saldo,
-                estado
-        );
-        System.out.println("insert the id:" + codigo);
-        return listRepository.showListOperadores();
-    }
-
 
     //Insertando usuario
     @RequestMapping(value = "/insert_usuario", produces = "application/json")
@@ -484,31 +454,6 @@ public class HomeController {
 
 
     // **************************** Listando con parametros *************************
-
-    // Consulta operador
-    @RequestMapping(value = "/consulta_operador", produces = "application/json")
-    @ResponseBody
-    public List<Map<String, Object>> consulta_operador(
-            // required params
-            @RequestParam String codOperador
-    ) {
-        //Get from Query with Params
-        System.out.println(listRepository.showConsultaOperador(codOperador));
-        return listRepository.showConsultaOperador(codOperador);
-    }
-
-
-    // Consulta operador x email
-    @RequestMapping(value = "/consulta_operadorxemail", produces = "application/json")
-    @ResponseBody
-    public Map<String, Object> consulta_operadorxemail(
-            // required params
-            @RequestParam String email
-    ) {
-        //Get from Query with Params
-        System.out.println(listRepository.showConsultaOperadorxemail(email));
-        return listRepository.showConsultaOperadorxemail(email).get(0);
-    }
 
 
     // Consulta visitante
