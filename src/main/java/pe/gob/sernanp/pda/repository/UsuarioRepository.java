@@ -27,8 +27,8 @@ public class UsuarioRepository {
 
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(
-        "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email, var_rol) VALUES(?,?,?,?,?)",
-        new String[]{"srl_cod_usuario"});
+          "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email, var_rol) VALUES(?,?,?,?,?)",
+          new String[] { "srl_cod_usuario" });
       ps.setString(1, usuario);
       ps.setString(2, clave);
       ps.setBoolean(3, true);
@@ -46,32 +46,30 @@ public class UsuarioRepository {
   public Map<String, Object> showLoginSernanp(String user, String pwd) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_usuario u "
-        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' " +
-        "AND ( var_rol = 'recaudador' OR var_rol = 'puesto' ) ", user, pwd);
+        .queryForList("SELECT * FROM t_usuario u " + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' "
+            + "AND ( var_rol = 'recaudador' OR var_rol = 'puesto' ) ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
       return map;
     } else {
-      map.put("error", "No se ha encontrado usuario");
+      map.put("error", "Usuario y/o Clave Incorrecta");
       return map;
     }
   }
-
 
   // Validando usuario
   public Map<String, Object> showLoginUser(String user, String pwd) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
-      .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
-        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+        .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
+            + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
-      map.put("tipoDocumento", tipoDocumentoRepository.findAll()  );
-      map.put("rutas", rutaRepository.findAll()  );
+      map.put("tipoDocumento", tipoDocumentoRepository.findAll());
+      map.put("rutas", rutaRepository.findAll());
       return map;
     } else {
-      map.put("error", "No se ha encontrado usuario");
+      map.put("error", "Usuario y/o Clave Incorrecta");
       return map;
     }
   }
@@ -81,6 +79,5 @@ public class UsuarioRepository {
     List<Map<String, Object>> list_usuarios = jdbcTemplate.queryForList("SELECT * FROM t_usuario");
     return list_usuarios;
   }
-
 
 }
