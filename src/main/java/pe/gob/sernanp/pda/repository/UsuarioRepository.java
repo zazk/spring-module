@@ -27,8 +27,8 @@ public class UsuarioRepository {
 
     jdbcTemplate.update(connection -> {
       PreparedStatement ps = connection.prepareStatement(
-          "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email, var_rol) VALUES(?,?,?,?,?)",
-          new String[] { "srl_cod_usuario" });
+        "INSERT INTO t_usuario(var_usuario, var_clave, bol_estado, var_email, var_rol) VALUES(?,?,?,?,?)",
+        new String[]{"srl_cod_usuario"});
       ps.setString(1, usuario);
       ps.setString(2, clave);
       ps.setBoolean(3, true);
@@ -46,8 +46,8 @@ public class UsuarioRepository {
   public Map<String, Object> showLoginSernanp(String user, String pwd) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
-        .queryForList("SELECT * FROM t_usuario u " + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' "
-            + "AND ( var_rol = 'recaudador' OR var_rol = 'puesto' ) ", user, pwd);
+      .queryForList("SELECT * FROM t_usuario u " + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' "
+        + "AND ( var_rol = 'recaudador' OR var_rol = 'puesto' ) ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
       return map;
@@ -61,8 +61,9 @@ public class UsuarioRepository {
   public Map<String, Object> showLoginUser(String user, String pwd) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
-        .queryForList("SELECT u.srl_cod_usuario, u.var_usuario, u.bol_estado, u.var_email, u.var_rol FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
-            + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
+      .queryForList("SELECT o.*, u.srl_cod_usuario, u.var_usuario, u.bol_estado, u.var_email, u.var_rol " +
+        " FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
+        + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
       map.put("tipoDocumento", tipoDocumentoRepository.findAll());

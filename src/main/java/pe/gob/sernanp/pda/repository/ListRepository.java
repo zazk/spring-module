@@ -743,7 +743,7 @@ public class ListRepository {
 
   // lista los paises
   public List<Map<String, Object>> showListPaises() {
-    List<Map<String, Object>> list_paises = jdbcTemplate.queryForList("SELECT * FROM t_pais");
+    List<Map<String, Object>> list_paises = jdbcTemplate.queryForList("SELECT * FROM t_pais ORDER BY var_nombre ASC");
     return list_paises;
   }
 
