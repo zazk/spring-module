@@ -61,7 +61,7 @@ public class UsuarioRepository {
   public Map<String, Object> showLoginUser(String user, String pwd) {
     Map<String, Object> map = new HashMap<String, Object>();
     List<Map<String, Object>> list = jdbcTemplate
-        .queryForList("SELECT * FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
+        .queryForList("SELECT u.srl_cod_usuario, u.var_usuario, u.bol_estado, u.var_email, u.var_rol FROM t_usuario u " + "INNER JOIN t_operador o ON u.var_email = o.var_email "
             + "WHERE u.var_email = ? AND var_clave = ? AND u.bol_estado = '1' ", user, pwd);
     if (list.size() > 0) {
       map.put("user", list.get(0));
