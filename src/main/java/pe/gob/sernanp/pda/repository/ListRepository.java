@@ -489,10 +489,19 @@ public class ListRepository {
     return obj;
   }
 
-  // Aprobar pago
-  public Map<String, Object> updatePagoAprobado(Integer codPago) {
-    int status = jdbcTemplate.update("UPDATE t_pago SET int_estado = 2 WHERE srl_cod_pago = ? ", codPago);
-    return updatePago(codPago, true);
+  // Aprobar Documento Grupo
+  public Grupo updateGrupoAprobado(Integer codGrupo) {
+    int status = jdbcTemplate.update("UPDATE t_grupo SET int_estado = 2 WHERE srl_cod_grupo = ? ", codGrupo);
+    return showConsultaGrupo(codGrupo);
+  }
+
+  // Rechazar Documento Grupo
+  public Grupo updateGrupoRechazo(Integer codGrupo, String motivoObservado) {
+    int status = jdbcTemplate.update(
+        "UPDATE t_pago SET int_estado = 3, txt_motivoobservado = ? WHERE srl_cod_grupo = ? ", motivoObservado,
+        codGrupo);
+    return showConsultaGrupo(codGrupo);
+    ;
   }
 
   public Map<String, Object> updatePago(Integer codPago, boolean agregar) {
@@ -501,6 +510,12 @@ public class ListRepository {
     Map<String, Object> operador = updateSaldoOperador(pago.get("var_cod_operador").toString(),
         Double.parseDouble(pago.get("num_monto").toString()), true);
     return operador;
+  }
+
+  // Aprobar pago
+  public Map<String, Object> updatePagoAprobado(Integer codPago) {
+    int status = jdbcTemplate.update("UPDATE t_pago SET int_estado = 2 WHERE srl_cod_pago = ? ", codPago);
+    return updatePago(codPago, true);
   }
 
   // Rechazar pago

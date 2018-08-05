@@ -6,17 +6,22 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.slf4j.Logger;
 import pe.gob.sernanp.pda.entities.Ruta;
 import pe.gob.sernanp.pda.entities.Visitante;
 import pe.gob.sernanp.pda.repository.*;
 import pe.gob.sernanp.pda.storage.StorageService;
 import pe.gob.sernanp.pda.entities.Grupo;
+
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -381,6 +386,28 @@ public class HomeController {
     return listRepository.showConsultaGrupo(codGrupo);
   }
 
+  // Aprobar Documento Grupo
+  @RequestMapping(value = "/update_grupoaprobado", produces = "application/json")
+  @ResponseBody
+  public Grupo update_grupoaprobado(
+      // required params
+      @RequestParam Integer codGrupo) {
+    // Get from Query with Params
+    System.out.println("update_grupoaprobado -- Update the id:" + codGrupo);
+    return listRepository.updateGrupoAprobado(codGrupo);
+  }
+
+  // Rechazar Documento Grupo
+  @RequestMapping(value = "/update_gruporechazo", produces = "application/json")
+  @ResponseBody
+  public Grupo update_gruporechazo(
+      // required params
+      @RequestParam Integer codGrupo, @RequestParam String motivoObservacion) {
+    // Get from Query with Params
+    System.out.println("Update the id:" + codGrupo);
+    return listRepository.updateGrupoRechazo(codGrupo, motivoObservacion);
+  }
+
   // Aprobar pago
   @RequestMapping(value = "/update_pagoaprobado", produces = "application/json")
   @ResponseBody
@@ -631,11 +658,18 @@ public class HomeController {
   @GetMapping("/file/{filename:.+}")
   @ResponseBody
   public Resource serveFile(@PathVariable String filename) {
-    System.out.println("Serving File File============= ");
+    System.out.println("Serving File File============= " + filename);
     Resource file = storageService.loadAsResource(filename);
     return file;
     // ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
     // "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+  }
+
+  @GetMapping(value = "/download/{filename:.+}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+  @ResponseBody
+  public FileSystemResource downloadFile(@PathVariable String filename, HttpServletResponse response) {
+    System.out.println("Serving File File============= " + filename);
+    return new FileSystemResource(storageService.loadAsFile(filename));
   }
 
   private Map uploadFile(MultipartFile file) {
