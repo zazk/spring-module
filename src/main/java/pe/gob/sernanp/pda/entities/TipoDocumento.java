@@ -1,10 +1,10 @@
 package pe.gob.sernanp.pda.entities;
+
 import javax.persistence.*;
 
-@NamedQueries({
-})
+@NamedQueries({})
 @Entity
-@Table(name="t_tip_documento")
+@Table(name = "t_tip_documento")
 public class TipoDocumento {
   @Id
   @GeneratedValue

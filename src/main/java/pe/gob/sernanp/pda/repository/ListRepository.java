@@ -815,63 +815,62 @@ public class ListRepository {
   }
 
   public List<Map<String, Object>> reportePorOperador() {
-    return jdbcTemplate.queryForList("select * from (\n" + "select \n" + "    r.var_nombre, \n"
-        + "    sum(case when v.srl_cod_pais = '172' then 1 else 0 end) Nacional,\n"
-        + "    sum(case when v.srl_cod_pais != '172' then 1 else 0 end) Extranjero,\n"
-        + "    count(r.srl_cod_ruta) total\n" + "from t_ruta r\n"
-        + "left join t_grupo g on g.srl_cod_ruta = r.srl_cod_ruta\n"
-        + "left join t_grupo_visitante gv on gv.srl_cod_grupo = g.srl_cod_grupo\n"
-        + "left join t_visitante v on v.srl_cod_visitante = gv.srl_cod_visitante\n" + "group by (r.srl_cod_ruta)\n"
-        + "union\n" + "select \n" + "    'Total',\n"
-        + "    sum(case when v.srl_cod_pais = '172' then 1 else 0 end) Nacional,\n"
-        + "    sum(case when v.srl_cod_pais != '172' then 1 else 0 end) Extranjero,\n" + "    count(*) total\n"
-        + "from t_ruta r\n" + "left join t_grupo g on g.srl_cod_ruta = r.srl_cod_ruta\n"
-        + "left join t_grupo_visitante gv on gv.srl_cod_grupo = g.srl_cod_grupo\n"
-        + "left join t_visitante v on v.srl_cod_visitante = gv.srl_cod_visitante\n" + ") rows \n"
-        + "order by var_nombre\n" + ";");
+    return jdbcTemplate.queryForList("select * from ( " + "select  " + "    r.var_nombre,  "
+        + "    sum(case when v.srl_cod_pais = '172' then 1 else 0 end) Nacional, "
+        + "    sum(case when v.srl_cod_pais != '172' then 1 else 0 end) Extranjero, "
+        + "    count(r.srl_cod_ruta) total " + "from t_ruta r "
+        + "left join t_grupo g on g.srl_cod_ruta = r.srl_cod_ruta "
+        + "left join t_grupo_visitante gv on gv.srl_cod_grupo = g.srl_cod_grupo "
+        + "left join t_visitante v on v.srl_cod_visitante = gv.srl_cod_visitante " + "group by (r.srl_cod_ruta) "
+        + "union " + "select  " + "    'Total', "
+        + "    sum(case when v.srl_cod_pais = '172' then 1 else 0 end) Nacional, "
+        + "    sum(case when v.srl_cod_pais != '172' then 1 else 0 end) Extranjero, " + "    count(*) total "
+        + "from t_ruta r " + "left join t_grupo g on g.srl_cod_ruta = r.srl_cod_ruta "
+        + "left join t_grupo_visitante gv on gv.srl_cod_grupo = g.srl_cod_grupo "
+        + "left join t_visitante v on v.srl_cod_visitante = gv.srl_cod_visitante " + ") rows  "
+        + "order by var_nombre");
   }
 
-  public List<Map<String, Object>> reportePorAbonos() {
-    return jdbcTemplate.queryForList("select \n" + "    '-' Total,\n" + "    dte_fec_creacion,\n"
-        + "    dte_fec_abono,\n" + "    dte_fec_validacion,\n" + "    var_operacion,\n" + "    num_monto\n" + "from\n"
-        + "    t_pago p\n" + "where \n" + "    var_cod_operador = 'ope-1'\n" + "union \n" + "select \n"
-        + "    'Total',\n" + "    null,\n" + "    null,\n" + "    null,\n" + "    null,\n" + "    SUM(num_monto)\n"
-        + "from\n" + "    t_pago p\n" + "where \n" + "    var_cod_operador = 'ope-1'");
+  public List<Map<String, Object>> reportePorAbonos(String codOperador) {
+    return jdbcTemplate.queryForList("select  " + "    '-' Total, " + "    dte_fec_creacion, " + "    dte_fec_abono, "
+        + "    dte_fec_validacion, " + "    var_operacion, " + "    num_monto " + "from " + "    t_pago p " + "where  "
+        + "    var_cod_operador = ? " + "union  " + "select  " + "    'Total', " + "    null, " + "    null, "
+        + "    null, " + "    null, " + "    SUM(num_monto) " + "from " + "    t_pago p " + "where  "
+        + "    var_cod_operador = ?", codOperador, codOperador);
   }
 
   public List<Map<String, Object>> reportePorRecaudacion() {
-    return jdbcTemplate.queryForList("select \n" + "    o.var_razonsocial,\n" + "\n"
-        + "    sum(p.num_monto) TotalDeposito,\n" + "    (sum(p.num_monto) - o.num_saldo) TotalRecaudacion,\n"
-        + "    o.num_saldo\n" + "from\n" + "    t_operador o\n"
-        + "inner join t_pago p on p.var_cod_operador = o.var_cod_operador\n" + "Group by \n" + "o.var_cod_operador");
+    return jdbcTemplate.queryForList("select  " + "    o.var_razonsocial, " + " "
+        + "    sum(p.num_monto) TotalDeposito, " + "    (sum(p.num_monto) - o.num_saldo) TotalRecaudacion, "
+        + "    o.num_saldo " + "from " + "    t_operador o "
+        + "inner join t_pago p on p.var_cod_operador = o.var_cod_operador " + "Group by  " + "o.var_cod_operador");
   }
 
   public List<Map<String, Object>> reportePorRecaudacionRuta() {
-    return jdbcTemplate.queryForList("select \n" + "   o.var_razonsocial ,\n" + "\n"
-        + "    sum(case when g.srl_cod_ruta = 1 then g.num_costo else 0 end) RecaudacionRuta1,\n"
-        + "    sum(case when g.srl_cod_ruta = 1 then g.int_nro_visitante else 0 end) VisitantesRuta1,\n" + "\n"
-        + "    sum(case when g.srl_cod_ruta = 2 then g.num_costo else 0 end) RecaudacionRuta2,\n"
-        + "    sum(case when g.srl_cod_ruta = 2 then g.int_nro_visitante else 0 end) VisitantesRuta2,\n" + "    \n"
-        + "    sum(case when g.srl_cod_ruta = 3 then g.num_costo else 0 end) RecaudacionRuta3,\n"
-        + "    sum(case when g.srl_cod_ruta = 3 then g.int_nro_visitante else 0 end) VisitantesRuta3,\n" + "    \n"
-        + "    sum(case when g.srl_cod_ruta = 4 then g.num_costo else 0 end) RecaudacionRuta4,\n"
-        + "    sum(case when g.srl_cod_ruta = 4 then g.int_nro_visitante else 0 end) VisitantesRuta4,\n" + "\n"
-        + "    sum(case when g.num_costo is not null then g.num_costo else 0 end) TotalRacaudacion\n" + "from\n"
-        + "    t_operador o\n" + "left join t_grupo g on g.var_cod_operador = o.var_cod_operador\n"
-        + "Group by o.var_cod_operador\n" + "order by o.var_razonsocial");
+    return jdbcTemplate.queryForList("select  " + "   o.var_razonsocial , " + " "
+        + "    sum(case when g.srl_cod_ruta = 1 then g.num_costo else 0 end) RecaudacionRuta1, "
+        + "    sum(case when g.srl_cod_ruta = 1 then g.int_nro_visitante else 0 end) VisitantesRuta1, " + " "
+        + "    sum(case when g.srl_cod_ruta = 2 then g.num_costo else 0 end) RecaudacionRuta2, "
+        + "    sum(case when g.srl_cod_ruta = 2 then g.int_nro_visitante else 0 end) VisitantesRuta2, " + "     "
+        + "    sum(case when g.srl_cod_ruta = 3 then g.num_costo else 0 end) RecaudacionRuta3, "
+        + "    sum(case when g.srl_cod_ruta = 3 then g.int_nro_visitante else 0 end) VisitantesRuta3, " + "     "
+        + "    sum(case when g.srl_cod_ruta = 4 then g.num_costo else 0 end) RecaudacionRuta4, "
+        + "    sum(case when g.srl_cod_ruta = 4 then g.int_nro_visitante else 0 end) VisitantesRuta4, " + " "
+        + "    sum(case when g.num_costo is not null then g.num_costo else 0 end) TotalRacaudacion " + "from "
+        + "    t_operador o " + "left join t_grupo g on g.var_cod_operador = o.var_cod_operador "
+        + "Group by o.var_cod_operador " + "order by o.var_razonsocial");
   }
 
   public List<Map<String, Object>> reportePorVisitantes() {
-    return jdbcTemplate.queryForList("select \n" + "    v.dte_fec_creacion,\n" + "    o.var_razonsocial,\n"
-        + "    g.var_cod_grupo,\n" + "    v.var_apellido,\n" + "    v.var_nombre,\n" + "    v.srl_cod_documento,\n"
-        + "    v.var_nro_documento,\n" + "    v.dte_fec_nacimiento,\n" + "    v.srl_cod_pais,\n" + "    v.var_sexo,\n"
-        + "    v.srl_cod_categoria,\n" + "    r.var_nombre,\n" + "    g.dte_fec_programada\n" + "from \n"
-        + "    t_visitante v\n" + "inner join\n"
-        + "    t_grupo_visitante gv On gv.srl_cod_visitante = v.srl_cod_visitante\n" + "inner join\n"
-        + "    t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo\n" + "inner join \n"
-        + "    t_operador o ON o.var_cod_operador = g.var_cod_operador\n" + "inner join \n"
-        + "    t_ruta r ON r.srl_cod_ruta = g.srl_cod_ruta\n" + "where \n" + "    gv.bol_ingreso = true;\n"
-        + "    ;\n");
+    return jdbcTemplate
+        .queryForList("select  " + "    v.dte_fec_creacion, " + "    o.var_razonsocial, " + "    g.var_cod_grupo, "
+            + "    v.var_apellido, " + "    v.var_nombre, " + "    v.srl_cod_documento, " + "    v.var_nro_documento, "
+            + "    v.dte_fec_nacimiento, " + "    v.srl_cod_pais, " + "    v.var_sexo, " + "    v.srl_cod_categoria, "
+            + "    r.var_nombre, " + "    g.dte_fec_programada " + "from  " + "    t_visitante v " + "inner join "
+            + "    t_grupo_visitante gv On gv.srl_cod_visitante = v.srl_cod_visitante " + "inner join "
+            + "    t_grupo g ON g.srl_cod_grupo = gv.srl_cod_grupo " + "inner join  "
+            + "    t_operador o ON o.var_cod_operador = g.var_cod_operador " + "inner join  "
+            + "    t_ruta r ON r.srl_cod_ruta = g.srl_cod_ruta " + "where  " + "    gv.bol_ingreso = true");
   }
 
   // ****************************** Fin listando

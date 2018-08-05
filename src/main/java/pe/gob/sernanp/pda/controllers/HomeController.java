@@ -622,21 +622,50 @@ public class HomeController {
 
   // *************************** Fin listando ********************************
 
-  @RequestMapping(value = "/get-books", method = RequestMethod.GET, produces = "application/json")
+  // *************************** Reportes *********************************
+  // Reporte por Operador
+  @RequestMapping(value = "/reporte_operador", produces = "application/json")
   @ResponseBody
-  public List<Map<String, Object>> listPost() {
-    // Get from Store Procedure
-    System.out.println(listRepository.showListStoreProcedures());
-    return listRepository.showListStoreProcedures();
+  public List<Map<String, Object>> reporte_operador() {
+    // Get from Query
+    System.out.println(listRepository.reportePorOperador());
+    return listRepository.reportePorOperador();
   }
 
-  @RequestMapping(value = "/set-book", method = RequestMethod.GET, produces = "application/json")
+  // Reporte por Abonos
+  @RequestMapping(value = "/reporte_abonos", produces = "application/json")
   @ResponseBody
-  public String setBookName() {
-    // Get from Store Procedure
-    System.out.println(listRepository.showListStoreProcedures());
-    listRepository.updateRow("Otro Name", 1);
-    return "true";
+  public List<Map<String, Object>> reporte_abonos(@RequestParam String codOperador) {
+    // Get from Query
+    System.out.println(listRepository.reportePorAbonos(codOperador));
+    return listRepository.reportePorAbonos(codOperador);
+  }
+
+  // Reporte por Recaudación
+  @RequestMapping(value = "/reporte_recaudacion", produces = "application/json")
+  @ResponseBody
+  public List<Map<String, Object>> reporte_recaudacion() {
+    // Get from Query
+    System.out.println(listRepository.reportePorRecaudacion());
+    return listRepository.reportePorRecaudacion();
+  }
+
+  // Reporte por Recaudación Ruta
+  @RequestMapping(value = "/reporte_recaudacion_ruta", produces = "application/json")
+  @ResponseBody
+  public List<Map<String, Object>> reporte_recaudacion_ruta() {
+    // Get from Query
+    System.out.println(listRepository.reportePorRecaudacionRuta());
+    return listRepository.reportePorRecaudacionRuta();
+  }
+
+  // Reporte por Visitantes
+  @RequestMapping(value = "/reporte_visitantes", produces = "application/json")
+  @ResponseBody
+  public List<Map<String, Object>> reporte_visitantes() {
+    // Get from Query
+    System.out.println(listRepository.reportePorVisitantes());
+    return listRepository.reportePorVisitantes();
   }
 
   // *************************** Subir Archivo *********************************
@@ -661,8 +690,6 @@ public class HomeController {
     System.out.println("Serving File File============= " + filename);
     Resource file = storageService.loadAsResource(filename);
     return file;
-    // ResponseEntity.ok().header(HttpHeaders.CONTENT_DISPOSITION,
-    // "attachment; filename=\"" + file.getFilename() + "\"").body(file);
   }
 
   @GetMapping(value = "/download/{filename:.+}", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
