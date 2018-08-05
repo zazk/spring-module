@@ -720,10 +720,12 @@ public class ListRepository {
   public List<Grupo> showListGrupos() {
     List<Map<String, Object>> rows = jdbcTemplate
         .queryForList("SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g "
-            + "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo " + "GROUP by g.srl_cod_grupo");
+            + "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo "
+            + "GROUP by g.srl_cod_grupo ORDER BY g.dte_fec_programada");
     List<Grupo> grupos = new ArrayList<Grupo>();
     for (Map row : rows) {
       grupos.add(setGrupoFromMap(row));
+      System.out.println(row);
     }
     return grupos;
   }
@@ -733,7 +735,8 @@ public class ListRepository {
     List<Map<String, Object>> rows = jdbcTemplate
         .queryForList("SELECT g.*, count(g.srl_cod_grupo) as total_visitantes FROM t_grupo g "
             + "INNER JOIN t_grupo_visitante gv ON gv.srl_cod_grupo = g.srl_cod_grupo "
-            + "WHERE g.dte_fec_programada = CURRENT_DATE " + "GROUP by g.srl_cod_grupo");
+            + "WHERE g.dte_fec_programada = CURRENT_DATE "
+            + "GROUP by g.srl_cod_grupo ORDER BY g.dte_fec_programada, g.srl_cod_grupo");
     List<Grupo> grupos = new ArrayList<Grupo>();
     for (Map row : rows) {
       grupos.add(setGrupoFromMap(row));
@@ -748,7 +751,7 @@ public class ListRepository {
     grupo.setCodigo((String) row.get("var_cod_grupo"));
     grupo.setCodOperador((String) row.get("var_cod_operador"));
     grupo.setDocumento((String) row.get("var_documento"));
-    grupo.setFecha(row.get("dte_fec_programada").toString());
+    grupo.setFecha(parseFechaFromDB(row.get("dte_fec_programada").toString()));
     grupo.setFechaModificacion(
         row.get("dte_fec_modificacion") == null ? null : row.get("dte_fec_modificacion").toString());
     grupo.setFechaCreacion(row.get("dte_fec_creacion").toString());
@@ -790,7 +793,9 @@ public class ListRepository {
   // lista de pagos
   public List<Map<String, Object>> showListPagos() {
     List<Map<String, Object>> list_pagos = jdbcTemplate.queryForList(
-        "SELECT p.*,o.var_razonsocial FROM t_pago p INNER JOIN t_operador o ON o.var_cod_operador = p.var_cod_operador");
+        "SELECT p.int_estado, p.num_monto, p.srl_cod_pago,txt_motivorechazo,p.var_cod_operador, p.var_comprobante,"
+            + "p.var_operacion,o.var_razonsocial "
+            + "FROM t_pago p INNER JOIN t_operador o ON o.var_cod_operador = p.var_cod_operador ORDER BY p.srl_cod_pago DESC");
     return list_pagos;
   }
 
@@ -876,6 +881,13 @@ public class ListRepository {
     System.out.println("parseFecha:" + fecha);
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
     return LocalDate.parse(fecha, formatter);
+  }
+
+  public String parseFechaFromDB(String fecha) {
+    System.out.println("parseFecha:" + fecha);
+    DateTimeFormatter formatterDB = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    DateTimeFormatter formatterWeb = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+    return LocalDate.parse(fecha, formatterDB).format(formatterWeb);
   }
 
   public Map send(String key, Object obj) {
