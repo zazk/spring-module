@@ -491,17 +491,16 @@ public class ListRepository {
 
   // Aprobar Documento Grupo
   public Grupo updateGrupoAprobado(Integer codGrupo) {
-    int status = jdbcTemplate.update("UPDATE t_grupo SET int_estado = 2 WHERE srl_cod_grupo = ? ", codGrupo);
+    int status = jdbcTemplate.update("UPDATE t_grupo SET int_estado = 4 WHERE srl_cod_grupo = ? ", codGrupo);
     return showConsultaGrupo(codGrupo);
   }
 
   // Rechazar Documento Grupo
   public Grupo updateGrupoRechazo(Integer codGrupo, String motivoObservado) {
     int status = jdbcTemplate.update(
-        "UPDATE t_pago SET int_estado = 3, txt_motivoobservado = ? WHERE srl_cod_grupo = ? ", motivoObservado,
+        "UPDATE t_grupo SET int_estado = 5, txt_motivoobservado = ? WHERE srl_cod_grupo = ? ", motivoObservado,
         codGrupo);
     return showConsultaGrupo(codGrupo);
-    ;
   }
 
   public Map<String, Object> updatePago(Integer codPago, boolean agregar) {
@@ -776,6 +775,7 @@ public class ListRepository {
     grupo.setRuta(row.get("srl_cod_ruta").toString());
     grupo.setTotalVisitantes((Long) row.get("total_visitantes"));
     grupo.setInasistencias((Integer) row.get("int_nro_inasistente"));
+    grupo.setMotivoObservado((String) row.get("txt_motivoobservado"));
 
     return grupo;
   }
